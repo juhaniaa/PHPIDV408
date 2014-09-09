@@ -18,7 +18,12 @@ class LoginView{
 	}
 	
 	public function getInputCredentials(){
-		return array($_POST["LoginView::usrNameId"], $_POST["LoginView::passwordId"]);
+		if(isset($_POST["LoginView::usrNameId"]) and isset($_POST["LoginView::passwordId"])){
+			return array("name"=>$_POST["LoginView::usrNameId"], "pass"=>md5($_POST["LoginView::passwordId"]));
+		} else {
+			return array("name"=>"", "pass"=>"");
+		}
+		
 	}
 	
 	public function showLogin($isLogged, $userName){

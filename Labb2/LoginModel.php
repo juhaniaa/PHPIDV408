@@ -23,7 +23,12 @@ class LoginModel{
 			$linePass = $line[1];
 			
 			if($lineUser === $user){
-				return true;
+	
+				if($linePass === $pass){
+					return true;
+				} else {
+					return false;
+				}
 			} else {
 				return false;	
 			}	
