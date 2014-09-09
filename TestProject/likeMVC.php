@@ -4,27 +4,27 @@ require_once("HTMLView.php");
 
 session_start();
 
-class LikeModel {
+class LikeModel { // har hand om sessionen
 	private $sessionLocation = "LikeModel::NumLikes";
-	
+
 	public function __construct(){
-		if(isset($_SESSION[$this->$sessionLocation]) == FALSE){
+		if(isset($_SESSION[$this->sessionLocation]) == FALSE){
 			
-			$_SESSION[$this->$sessionLocation] = 0;
+			$_SESSION[$this->sessionLocation] = 0;
 		}		
 	}
 	
 	public function getNumLikes(){
-		return $_SESSION[$this->$sessionLocation];
+		return $_SESSION[$this->sessionLocation];
 	}
 	
 	public function addLike(){
-		$_SESSION[$this->$sessionLocation] ++;	
+		$_SESSION[$this->sessionLocation] ++;	
 	}
 	
 }
 
-class LikeView {
+class LikeView { // har hand om det visuella som visas
 	private $model;
 	
 	public function __construct(LikeModel $model){ // dependancy injection
@@ -42,18 +42,24 @@ class LikeView {
 		
 		$likes = $this->model->getNumLikes();
 		$ret = "Antalet likes är $likes";
-		$ret .= "<a href='?iLike'>Like!</a>";
+		$ret .= "<form action='' method='post'>
+		<input type='submit' value='Gilla!' name='iLike'/>
+		</form>";
 		
 		if($this->didUserPressLike()){
 			
 			$ret .= "You Like!";
+			header("Location : " . $_SERVER["PHP_SELF"]);
+		} else {
+			$ret .= $this->messages->load();
+			
 		}
 		return $ret;
 		
 	}
 }
 
-class LikeController{
+class LikeController{ 
 	private $view;
 	private $model;
 	
