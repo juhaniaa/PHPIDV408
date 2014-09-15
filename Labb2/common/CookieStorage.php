@@ -4,7 +4,6 @@ class CookieStorage {
 
 	public function save($cookieName, $cookieInfo) {
 		setcookie($cookieName, $cookieInfo, time()+3600);
-		setcookie("test", "another test", time()+3600);
 	}
 
 	public function load($cookieName) {

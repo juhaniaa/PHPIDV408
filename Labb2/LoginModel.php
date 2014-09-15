@@ -35,13 +35,44 @@ class LoginModel{
 			} 
 		}
 		return $success;
+	}
+	
+	public function loginCredentialsUser($user, $pass){
 		
+		$lines = @file("LoginDates.txt");
+		
+		foreach ($lines as $userLine) {
+			
+			$line = explode("-", $userLine);
+			
+			$lineUser = $line[0];
+			$lineExp = $line[1];
+			
+			$now = time();
+			
+			$interval = $now - $lineExp;
+	
+			if($lineUser === $user){
+				if($interval > 0){
+					return $this->loginUser($user, $pass);
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function storeCookieDate($user, $expSeconds){
+		
+		$expTime = time() + $expTime;
+		
+		$fp = fopen("LoginDates.txt", 'a');
+		fwrite($fp, $user . "-" . $expTime . "\n");
 	}
 	
 	public function isUserLogged(){
 		
 		if(isset($_SESSION["logged"])){
-			return true;
+			return $_SESSION["logged"];
 		} else {
 			return false;
 		}
