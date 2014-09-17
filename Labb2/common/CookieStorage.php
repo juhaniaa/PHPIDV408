@@ -17,7 +17,6 @@ class CookieStorage {
 		}
 
 		setcookie($cookieName, "", time() -1);
-
 		return $ret;
 	}
 }

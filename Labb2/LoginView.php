@@ -1,6 +1,6 @@
 <?php
 
-require_once("common/CookieStorage.php");
+require_once("./common/CookieStorage.php");
 
 class LoginView{
 	
@@ -18,6 +18,10 @@ class LoginView{
 	}
 	
 	/* INPUT START */
+	
+	public function getClientIdentifier() {
+		return $_SERVER["HTTP_USER_AGENT"];
+	}
 	
 	// did user press "log in"
 	public function userTryLogin(){	
@@ -41,8 +45,7 @@ class LoginView{
 	public function getInputName($stored){
 		if($stored){
 			return $_COOKIE['loginUser'];
-		} else {
-				
+		} else {	
 			if(isset($_POST["LoginView::usrNameId"]) and strlen(trim($_POST["LoginView::usrNameId"])) !== 0){
 				$name = $_POST["LoginView::usrNameId"];
 				return $name;
@@ -112,17 +115,6 @@ class LoginView{
 	
 	/* COOKIE START */
 	
-	/*public function getNameCookieDate(){
-		var_dump($_COOKIE);	
-		$_COOKIE["loginUser"];
-		die();
-	}
-	
-	public function getPassCookieDate(){
-		var_dump($_COOKIE);
-		
-	}*/
-	
 	public function storeMessage($msg){		
 		$this->message->save($this->cookieMessage, $msg);
 		header('Location: ' . $_SERVER['PHP_SELF']);
@@ -140,39 +132,46 @@ class LoginView{
 	// show login
 	public function showLogin(){
 		
-		$ret;
+		$ret = "";
 		
 		$msg = $this->message->load($this->cookieMessage);
 		
 		$userInput = $this->message->load($this->cookieUser);
 		
-		$usr = $this->model->isUserLogged();
-
-		if($usr){
-			$ret = "<h1>Welcome " . $usr . "</h1>
+		$usrLogged = $this->model->isUserLogged($this->getClientIdentifier());
+		
+		if($usrLogged){
+			
+			$user = $this->model->getUserName();
+			
+			$ret .= "<h1>Welcome " . $user . "</h1>
 			<p>" . $msg . "</p>
 			<a href='?logout'>Log out</a>";
 		
 		} else {
 		
-			$ret = '<h1>Ej inloggad</h1>
+			$ret .= '<h1>Ej inloggad</h1>
 			<form action="?login" method="post">
-			<fieldset>
-			<legend>Login - Input username and password</legend>
-			<p>' . $msg . '</p>
-			<label for="usrNameId">Username:</label>
-			<input type="text" name="LoginView::usrNameId" id="usrNameId" value="' . $userInput . '">
-			<label for="passwordId">Password:</label>
-			<input type="password" name="LoginView::passwordId" id="passwordId">
-			<label for="keepLoggedId">Save credentials:</label>
-			<input type="checkbox" name="LoginView::Logged" id="keepLoggedId">
-			<input type="submit" value="Log in">';
+				<fieldset>
+					<legend>Login - Input username and password</legend>
+					<p>' . $msg . '</p>
+					<label for="usrNameId">Username:</label>
+					<input type="text" name="LoginView::usrNameId" id="usrNameId" value="' . $userInput . '">
+					<label for="passwordId">Password:</label>
+					<input type="password" name="LoginView::passwordId" id="passwordId">
+					<label for="keepLoggedId">Save credentials:</label>
+					<input type="checkbox" name="LoginView::Logged" id="keepLoggedId">
+					<input type="submit" value="Log in">
+				</fieldset>
+			</form>';
+			
 		}
 		
 		$ret .= $this->showDate();
-		return $ret;
-		
+		return $ret;	
 	}
+
+
 	
 	// show Date-message in swedish
 	public function showDate(){

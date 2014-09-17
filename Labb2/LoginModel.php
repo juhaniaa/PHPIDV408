@@ -1,16 +1,12 @@
 <?php
 
 class LoginModel{
-	
-	public function __construct(){
-		
-	}
 
 	/*
 	 * Check if LoginModel.txt has the kombination of username and password
 	 * @return success:bool
 	 */
-	public function loginUser($user, $pass){
+	public function loginUser($user, $pass, $clientId){
 				
 		$success = false;
 		
@@ -28,7 +24,8 @@ class LoginModel{
 					$success = true; // success
 					
 					// save session
-					$_SESSION["logged"] = $user;
+					$_SESSION["logged"] = $clientId;
+					$_SESSION["loggedUser"] = $user;
 					
 					return $success;
 				} 
@@ -37,24 +34,23 @@ class LoginModel{
 		return $success;
 	}
 	
-	public function loginCredentialsUser($user, $pass){
+	public function loginCredentialsUser($user, $pass, $clientId){
 		
 		$lines = @file("LoginDates.txt");
 		
+		$now = time();
+		
 		foreach ($lines as $userLine) {
 			
-			$line = explode("-", $userLine);
-			
+			$line = explode("-", $userLine);			
 			$lineUser = $line[0];
-			$lineExp = $line[1];
-			
-			$now = time();
-			
-			$interval = $now - $lineExp;
+			$lineExp = $line[1];	
 	
 			if($lineUser === $user){
+				$interval = $lineExp - $now;
+				
 				if($interval > 0){
-					return $this->loginUser($user, $pass);
+					return $this->loginUser($user, $pass, $clientId);
 				}
 			}
 		}
@@ -63,24 +59,30 @@ class LoginModel{
 	
 	public function storeCookieDate($user, $expSeconds){
 		
-		$expTime = time() + $expTime;
+		$expTime = time() + $expSeconds;
 		
-		$fp = fopen("LoginDates.txt", 'a');
-		fwrite($fp, $user . "-" . $expTime . "\n");
+		file_put_contents("LoginDates.txt", $user . "-" . $expTime . "\n");
+			
 	}
 	
-	public function isUserLogged(){
+	public function getUserName(){
+		return $_SESSION["loggedUser"];
+	}
+	
+	public function isUserLogged($client){
 		
 		if(isset($_SESSION["logged"])){
-			return $_SESSION["logged"];
-		} else {
-			return false;
-		}
+			if($_SESSION["logged"] == $client){
+				return $_SESSION["logged"];
+			}
+		} 
+		return false;
 	}
 	
 	public function logoutUser(){ 
 		
 		unset($_SESSION["logged"]);
+		unset($_SESSION["loggedUser"]);
 		return true;
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 
-require_once("LoginView.php");
-require_once("LoginModel.php");
+require_once("./LoginView.php");
+require_once("./LoginModel.php");
 
 class LoginController{
 	private $model;
@@ -16,7 +16,7 @@ class LoginController{
 	public function authenticate(){
 		
 		// if user is  logged
-		if($this->model->isUserLogged()){
+		if($this->model->isUserLogged($this->view->getClientIdentifier())){
 			
 			/* Use Case 2 Logging out an authenticated user */
 			return $this->logoutUser();
@@ -52,7 +52,7 @@ class LoginController{
 			$keepCreds = $this->view->keepCredentials();
 			
 			// UC 1 4: authenticate user...
-			$answer = $this->model->loginUser($inpName, $inpPass);
+			$answer = $this->model->loginUser($inpName, $inpPass, $this->view->getClientIdentifier());
 			
 			// UC 1 4a: user could not be authenticated
 			if($answer === false){
@@ -109,7 +109,7 @@ class LoginController{
 		$inpPass = $this->view->getInputPassword(true);
 		//$nameCookieDate = $this->view->getNameCookieDate();
 		//$passCookieDate = $this->view->getPassCookieDate();
-		$answer = $this->model->loginCredentialsUser($inpName, $inpPass);
+		$answer = $this->model->loginCredentialsUser($inpName, $inpPass, $this->view->getClientIdentifier());
 		
 		if($answer){
 			
