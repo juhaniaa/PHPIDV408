@@ -59,8 +59,12 @@ class LoginController{
 				
 				// 1. System presents an error message
 				// 2. Step 2 in main scenario
-				$this->view->storeMessage("Felaktigt användarnamn och/eller lösenord");
+				
 				$this->view->storeUserInput($inpName);
+				
+				// redirects to self
+				$this->view->storeMessage("Felaktigt användarnamn och/eller lösenord");
+				
 			} else {
 				
 				if($keepCreds){
@@ -68,10 +72,14 @@ class LoginController{
 					// UC 1 3a-1: ...system presents that...the user credentials were saved
 					$expTime = $this->view->storeCredentials($inpName, $inpPass);
 					$this->model->storeCookieDate($inpName, $expTime);
+					
+					/* redirects to self */
 					$this->view->storeMessage("Inloggning lyckades och vi kommer ihåg dig nästa gång");
 				} else {
 					
 					// ...and present success message
+					
+					/* redirects to self */
 					$this->view->storeMessage("Inloggningen lyckades");
 				}
 			}
@@ -92,6 +100,8 @@ class LoginController{
 			// UC 2 4: The system logs the user out and presents a feedback message
 			$this->model->logoutUser();
 			$this->view->removeCredentials();
+			
+			/* redirects to self */
 			$this->view->storeMessage("Du har blivit utloggad");
 			
 		// UC 2 1: The system presents a logout choice	
@@ -107,20 +117,22 @@ class LoginController{
 			// - System authenticates the user and presents that the authentication succeeded and that it happened with saved credentials
 		$inpName = $this->view->getInputName(true);
 		$inpPass = $this->view->getInputPassword(true);
-		//$nameCookieDate = $this->view->getNameCookieDate();
-		//$passCookieDate = $this->view->getPassCookieDate();
 		$answer = $this->model->loginCredentialsUser($inpName, $inpPass, $this->view->getClientIdentifier());
 		
 		if($answer){
 			
+			/* redirects to self */
 			$this->view->storeMessage("Inloggning lyckades via cookies");
 		} else {
 			
 			// 2a. The user could not be authenticated (too old credentials > 30 days) (Wrong credentials) Manipulated credentials.
 				// 1. System presents error message
 				// Step 2 in UC 1
-			$this->view->storeMessage("Felaktig information i cookie");
+				
 			$this->view->removeCredentials();
+				
+			/* redirects to self */
+			$this->view->storeMessage("Felaktig information i cookie");
 		}
 	}	
 }

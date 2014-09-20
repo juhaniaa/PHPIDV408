@@ -56,7 +56,7 @@ class LoginView{
 		}
 	}
 	
-	// retrieve user input password
+	// retrieve user input password or stored
 	public function getInputPassword($stored){
 		
 		if($stored){
@@ -122,7 +122,7 @@ class LoginView{
 	
 	public function storeUserInput($userName){		
 		$this->message->save($this->cookieUser, $userName);
-		header('Location: ' . $_SERVER['PHP_SELF']);
+		//header('Location: ' . $_SERVER['PHP_SELF']);
 	}
 	
 	/* COOKIE END */
