@@ -17,6 +17,7 @@ Actors:
 
 2. Salesperson
 	- See how many seats are still open for relevant shows
+	- Wants to confirm that customer has booked a ticket
 
 3. Administrator
 	- Wants to add movies to list of available movies
