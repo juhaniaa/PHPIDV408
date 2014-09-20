@@ -1,7 +1,6 @@
 Requirement Specification ProjectPHP
 ====================================
 Juhani Aavanen - ja222qm
-========================
 
 Terms:
 ------
@@ -24,7 +23,7 @@ Actors:
 	- Wants to add shows to available movies
 	
 Use-cases:
----------
+----------
 
 1. Customer
 	- UC 1.1 Customer views list of all availble movies
