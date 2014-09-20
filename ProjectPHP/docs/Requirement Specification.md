@@ -26,10 +26,10 @@ Use-cases:
 ---------
 
 1. Customer
-	* UC 1.1 Customer views list of all availble movies
-	* UC 1.2 Customer views list of all shows ordered by date/time
-	* UC 1.3 Customer views specific movie information
-	* UC 1.4 Cusomter books tickets
+	- UC 1.1 Customer views list of all availble movies
+	- UC 1.2 Customer views list of all shows ordered by date/time
+	- UC 1.3 Customer views specific movie information
+	- UC 1.4 Cusomter books tickets
 	
 2. Salesperson
 	- UC 2.1 Salesperson views list of shows
@@ -37,8 +37,8 @@ Use-cases:
 	- UC 2.3 Salesperson confirms booking
 	
 3. Administrator
-	UC 3.1 Administrator adds cinema
-	UC 3.2 Administrator adds movie
-	UC 3.3 Administrator adds show
+	- UC 3.1 Administrator adds cinema
+	- UC 3.2 Administrator adds movie
+	- UC 3.3 Administrator adds show
 
 
