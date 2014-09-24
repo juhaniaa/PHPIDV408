@@ -1,10 +1,10 @@
 <?php
 
 require_once ('./common/HTMLView.php');
-require_once ('./src/controller/cinemaController.php');
+require_once ('./src/controller/navController.php');
 
-$c = new \controller\cinemaController();
-$htmlBody = $c->showMovies();
+$navController = new \controller\navController();
+$htmlBody = $navController->doControll();
 
 $view = new HTMLView(); 
 $view->echoHTML($htmlBody);

@@ -19,7 +19,6 @@
 namespace controller;
 	
 require_once("./src/model/cinemaModel.php");
-
 require_once("./src/view/cinemaView.php");
 
 class cinemaController {
@@ -34,7 +33,14 @@ class cinemaController {
 	public function showMovies(){
 		/* UC 1.1 */
 		return $this->view->showMovieList();
-		
+	}
+	
+	public function showStart(){
+		return $this->view->showStart();
+	}
+	
+	public function showShows(){
+		return $this->view->showShowList();
 	}
 	
 }
