@@ -3,17 +3,23 @@
 namespace model;
 
 class Show{
-	private $showDate = "20 sep 2014";
+	private $showDate;
 	private $movie;
 	
-	public function __construct(Movie $movie){
+	public function __construct(Movie $movie, \DateTime $showDate){
 		$this->movie = $movie;
+		$this->showDate = $showDate->format('d-m-Y H:i');
 	}
 	
 	public function getInfo(){
 		$info = "";
 		$info .= $this->movie->getTitle();
-		$info .= $this->showDate;
 		return $info;
 	}
+	
+	public function getDateTime(){
+		$ret = $this->showDate;
+		return $ret;
+	}
+
 }

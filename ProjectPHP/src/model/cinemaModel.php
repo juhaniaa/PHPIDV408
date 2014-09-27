@@ -15,20 +15,34 @@ class cinemaModel{
 		return $this->movies;
 	}
 	
+	public function getMovieById($id){
+		return new Movie("Movie $id", $id);
+	}
+	
 	public function getShows(){
 		$this->setMovies();
 		$this->setShows();
 		return $this->shows;
 	}
 	
+	public function getShowsByMovie($movieId){
+		$this->movies[] = new Movie("Movie $movieId", $movieId);
+		$this->setShows();
+		return $this->shows;
+	}
+	
+	/* temporary help-functions to create static data */
 	private function setMovies(){
-		$this->movies[] = new Movie("Movie 1");
-		$this->movies[] = new Movie("Movie 2");	
+		$this->movies[] = new Movie("Movie 1", 1);
+		$this->movies[] = new Movie("Movie 2", 2);	
 	}
 	
 	private function setShows(){
 		foreach ($this->movies as $movie) {
-			$this->shows[] = new Show($movie);
+			
+			$dateTime = \DateTime::createFromFormat('d/m/Y/H/i', '21/04/2015/14/30');
+			
+			$this->shows[] = new Show($movie, $dateTime);	
 		}
 	}
 }

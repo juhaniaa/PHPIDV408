@@ -2,7 +2,9 @@
 
 /* 1. Customer
 	- UC 1.1 Customer views list of all availble movies
+ 		+ användaren vill se vilka filmer som finns just nu
 	- UC 1.2 Customer views list of all shows ordered by date/time
+		+ användaren vill se vad som visas just nu
 	- UC 1.3 Customer views specific movie information
 	- UC 1.4 Cusomter books tickets
 	
@@ -40,7 +42,13 @@ class cinemaController {
 	}
 	
 	public function showShows(){
+		/* UC 1.2 */
 		return $this->view->showShowList();
+	}
+	
+	public function showMovieInfo(){
+		/* UC 1.3 */
+		return $this->view->showMovieInfo();
 	}
 	
 }

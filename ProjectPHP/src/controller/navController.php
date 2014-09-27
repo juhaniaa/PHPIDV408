@@ -17,6 +17,11 @@ class navController{
 			case \view\navView::$actionShowShows;
 				$controller = new cinemaController();
 				return $controller->showShows();
+				break;
+				
+			case \view\navView::$actionShowMovieInfo;
+				$controller = new cinemaController();
+				return $controller->showMovieInfo();
 			
 			default:
 				$controller = new cinemaController();

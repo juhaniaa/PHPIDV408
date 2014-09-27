@@ -4,10 +4,12 @@ namespace view;
 
 class navView{
 	private static $action = "action";
+	private static $movie = "movie";
 	
 	public static $actionShowStart = "start";
 	public static $actionShowMovies = "movies";
 	public static $actionShowShows = "shows";
+	public static $actionShowMovieInfo = "movie";
 	
 	public static function getMenu(){
 		$html = "<div id='menu'><ul>";
@@ -24,5 +26,14 @@ class navView{
 		} else {
 			return self::$actionShowStart;
 		}
+	}
+	
+	public static function getMovieNav($movieTitle, $movieId){
+		$ret = '<li><a href="?' . self::$action . '=' . self::$actionShowMovieInfo . '&' . self::$movie . '=' . $movieId . '">' . $movieTitle . '</a></li>';
+		return $ret;
+	}
+	
+	public static function getMovieId(){
+		return $_GET[self::$movie];
 	}
 }
