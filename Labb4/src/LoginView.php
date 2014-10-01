@@ -4,6 +4,7 @@ class LoginView {
 	private $model;
 	private $loginForm;
 	private $logoutForm;
+	private $registryForm;
 	
 	//Konstruktor
 	public function __construct(LoginModel $model) {
@@ -19,12 +20,25 @@ class LoginView {
 							<label>Håll mig inloggad: </label>
 							<input type='checkbox' name='stayLoggedOn'/>
 							<input type='submit' name='loginButton' value='Logga in'/>
-							</fieldset>
-							</form>";
+							<input type='submit' name='register' value='Registrera ny användare'/>
+							</fieldset>";
 		$this->logoutForm .= "
 							<form action='index.php' method='post'>
 							<input type='submit' name='logoutButton' value='Logga ut'/>
 							</form>";
+		$this->registryForm .= "
+							<form action='index.php' method='post'>
+							<fieldset>
+							<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
+							<label>Namn: </label>
+							<input type='text' name='regName'/>
+							<label>Lösenord: </label>
+							<input type='password' name='regPassword'/>
+							<label>Repetera Lösenord: </label>
+							<input type='password' name='regRepeatPassword'/>
+							<label>Skicka: </label>
+							<input type='submit' name='doRegister' value='Registrera'/>
+							</fieldset>";
 	}
 
 	//Visar Login-sida
@@ -85,6 +99,30 @@ class LoginView {
 		}
 		return $ret;
 	}
+	
+	public function showRegisterPage(){
+		$ret = "";
+		
+		$ret .= "<a href='index.php'>Tillbaka</a>";
+		
+		$ret .= "<h2>Ej inloggad, Registrerar användare</h2>";
+		
+		$ret .= $this->registryForm;
+		
+		return $ret;
+	}
+	
+	public function showRegistrySuccess(){
+		$ret = "";
+		
+		$ret .= "<a href='index.php'>Till start</a>";
+		
+		$ret .= "<h2>Registreringen lyckades, tror jag</h2>";
+		
+		return $ret;
+		
+	}
+	
 	//Hämtar användarens IP-address och webbläsare
 	public function getServerInfo(){
 		$aip = $_SERVER["REMOTE_ADDR"];
@@ -110,6 +148,37 @@ class LoginView {
 			exit();
 		}
 	}
+	
+	//Hämtar registrerings namn
+	public function getRegName(){
+		if(isset($_POST["regName"])){
+			$regName = filter_var(trim($_POST["regName"]), FILTER_SANITIZE_STRING);
+			return $regName;
+		}else{
+			exit();
+		}
+	}
+	
+	//Hämtar registrerings lösenord
+	public function getRegPassword(){
+		if(isset($_POST["regPassword"])){
+			$regPassword = filter_var(trim($_POST["regPassword"]), FILTER_SANITIZE_STRING);
+			return $regPassword;
+		}else{
+			exit();
+		}
+	}
+	
+	//Hämtar registrerings-repetitions lösenord
+	public function getRegRepeatPassword(){
+		if(isset($_POST["regRepeatPassword"])){
+			$regRepeatPassword = filter_var(trim($_POST["regRepeatPassword"]), FILTER_SANITIZE_STRING);
+			return $regRepeatPassword;
+		}else{
+			exit();
+		}
+	}
+	
 	//Hämtar värde i användarnamn-kaka
 	public function getUserNameCookie(){
 		if(isset($_COOKIE["LoginView::UserName"])){
@@ -172,4 +241,24 @@ class LoginView {
 			return false;
 		}
 	}
+	
+	//Kontrollerar om användaren klckat på "Registrera ny användare"
+	public function userWantsToRegister(){
+		if(isset($_POST["register"])){
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	//Kontrollerar om användaren klickat på "Registrera"
+	public function userPressedRegister(){
+		if(isset($_POST["doRegister"])){
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+
 }

@@ -1,5 +1,7 @@
 <?php
 
+
+
 require_once("src/LoginModel.php");
 require_once("src/LoginView.php");
 
@@ -53,6 +55,19 @@ class LoginController {
 				$this->view->unsetCookies();
 				$ret = $this->view->showValidationPage($cookieValResult);
 			}
+			
+		//Kontrollerar om användaren vill gå till sidan för att registrera en användare
+		}elseif($this->view->userWantsToRegister()){
+				
+			// Show registry form
+			return $this->showRegisterPage();
+			
+		//Kontrollerar om användaren försöker registrera en användare
+		}elseif($this->view->userPressedRegister()){
+			
+			// UC4. Register a new user
+			return $this->doRegister();
+		
 		//Kontrollerar om användaren försöker logga in, visar annars login-sida	
 		}else{
 			if($this->view->userPressedLogon()){
@@ -99,5 +114,36 @@ class LoginController {
 			}
 		}
 		return $ret;
+	}
+
+	//Funcktion som visar registreringsformulär
+	public function showRegisterPage(){
+		
+		//System ask for username and password
+		return $this->view->showRegisterPage();
+	}
+
+	//Starts when a user wants to create login-credentials
+	public function doRegister(){
+		
+		//User provides username and password
+		$regName = $this->view->getRegName();
+		$regPassword = $this->view->getRegPassword();
+		$regRepeatPassword = $this->view->getRegRepeatPassword();
+		
+		// if validation of name and password is ok...
+		if(true){
+			//System saves the credentials 
+			$this->model->insertUser($regName, $regPassword);
+			
+			//and presents a success message
+			return $this->view->showRegistrySuccess();
+			
+		} else{
+			//4a. Credentials could not be registered (Username already used, wrong username format, Wrong password format.
+			//1. System presents an error message
+			//2. Step 2 in main scenario.
+			
+		}
 	}		
 }

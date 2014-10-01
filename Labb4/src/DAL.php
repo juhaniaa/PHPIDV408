@@ -76,4 +76,19 @@ class DAL {
 			exit();
 		}
 	}
+	
+	//Lägger till ny användares anv-namn och lösenord i tabellen UserData
+	public function insertUser($userName, $password){
+		$escUserName = $this->dbc->real_escape_string($userName);
+		$escPassword = $this->dbc->real_escape_string($password);
+		
+		$utf8 = mysqli_set_charset($this->dbc, "utf8");
+		
+		if($utf8){
+			$this->dbc->query("INSERT INTO UserData (`username`, `password`) 
+			VALUES ('$escUserName', '$escPassword')");
+		}else{
+			exit();
+		}
+	}
 }

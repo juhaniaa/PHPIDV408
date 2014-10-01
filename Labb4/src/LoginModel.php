@@ -98,4 +98,9 @@ class LoginModel {
 	public function deleteCookies($userName, $password){
 		$this->dal->deleteEntries($userName, $password);
 	}
+	
+	//Lägger till ny användare i tabellen UserData
+	public function insertUser($regName, $regPassword){
+		$this->dal->insertUser($regName, $regPassword);
+	}
 }

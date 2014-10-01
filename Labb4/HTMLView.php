@@ -8,7 +8,7 @@ class HTMLView {
 			<!DOCTYPE html>
 			<html lang='sv'>
 			<head>
-				<title>Lab2Login</title>
+				<title>Labb 4 Login</title>
 				<meta charset='utf-8' />
 			</head>
 			<body>
