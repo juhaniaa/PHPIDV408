@@ -40,7 +40,7 @@ class LoginModel{
 		
 		$now = time();
 		
-		foreach ($lines as $userLine) {
+		foreach ($lines as $userLine){
 			
 			$line = explode("-", $userLine);			
 			$lineUser = $line[0];
