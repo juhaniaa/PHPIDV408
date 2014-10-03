@@ -126,13 +126,35 @@ class LoginController {
 	//Starts when a user wants to create login-credentials
 	public function doRegister(){
 		
+		$do = "";
+		
 		//User provides username and password
 		$regName = $this->view->getRegName();
 		$regPassword = $this->view->getRegPassword();
 		$regRepeatPassword = $this->view->getRegRepeatPassword();
 		
+		$nameLengthOk = $this->model->checkNameLength($regName);
+		$passLengthOk = $this->model->checkPassLength($regPassword);
+		
+		if(!$nameLengthOk and $passLengthOk){
+			return $this->view->showRegNameError();
+		} elseif(!$passLengthOk and $nameLengthOk){
+			return $this->view->showRegPassError();
+		} elseif(!$passLengthOk and !$nameLengthOk){
+			return $this->view->showRegBothError();
+		}
+		
+		if($regPassword !== $regRepeatPassword){
+			// passwords do not match
+			return $this->view->showPasswordError();
+		}
+		
+		$inputOk = $this->model->registryInputValidation($regName, $regPassword);
+		
+		$uniqueUser = $this->model->checkUniqueUser($regName);
+		
 		// if validation of name and password is ok...
-		if(true){
+		if($inputOk){
 			//System saves the credentials 
 			$this->model->insertUser($regName, $regPassword);
 			
@@ -143,7 +165,7 @@ class LoginController {
 			//4a. Credentials could not be registered (Username already used, wrong username format, Wrong password format.
 			//1. System presents an error message
 			//2. Step 2 in main scenario.
-			
+			return $this->view->showError();
 		}
 	}		
 }

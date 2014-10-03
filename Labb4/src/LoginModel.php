@@ -78,6 +78,43 @@ class LoginModel {
 			}
 		}
 	}
+	
+	public function checkNameLength($name){
+		if(strlen($name) < 3){
+			return false;
+		} else{
+			return true;
+		}
+	}
+	
+	public function checkPassLength($pass){
+		if(strlen($psss) < 6){
+			return false;
+		} else{
+			return true;
+		}
+		
+	}
+	
+	public function registryInputValidation($name, $pass){
+		$res = "";
+		
+		$pattern = '/[a-z0-9]+/i'; 
+			
+		if (preg_match($pattern, $name)) {
+			$res = false;
+			
+		}
+		
+		if (preg_match($pattern, $pass)) {
+			$res = false;
+			
+		}
+		
+		return $res;
+		
+	}
+	
 	//Lagrar användarens IP-adress och webbläsare i sessionsvariabeln "ident"
 	public function setServerInfo($serverInfo){
 		$aip = $serverInfo[0];

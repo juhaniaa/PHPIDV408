@@ -9,12 +9,20 @@ class LoginView {
 	//Konstruktor
 	public function __construct(LoginModel $model) {
 		$this->model = $model;
+		$userPost;
+		
+		if(isset($_POST["userName"])){
+			$userPost = htmlspecialchars($_POST['userName']);
+		} else if(isset($_POST["regName"])){
+			$userPost = htmlspecialchars($_POST['regName']);
+		}
+		
 		$this->loginForm .= "
 							<form action='index.php' method='post'>
 							<fieldset>
 							<legend>Login - Skriv in användarnamn och lösenord</legend>
 							<label>Namn: </label>
-							<input type='text' name='userName' value='" . htmlspecialchars($_POST['userName']) . "'/>
+							<input type='text' name='userName' value='" . $userPost . "'/>
 							<label>Lösenord: </label>
 							<input type='password' name='password'/>
 							<label>Håll mig inloggad: </label>
@@ -115,9 +123,57 @@ class LoginView {
 	public function showRegistrySuccess(){
 		$ret = "";
 		
-		$ret .= "<a href='index.php'>Till start</a>";
+		$ret .= "<h2>Registrering av ny användare lyckades</h2>";
 		
-		$ret .= "<h2>Registreringen lyckades, tror jag</h2>";
+		$ret .= $this->loginForm;
+		
+		return $ret;
+		
+	}
+	
+	public function showPasswordError(){
+		
+		$ret = "<h2>Passwords do not match</h2>";
+		
+		$ret .= $this->showRegisterPage();
+		
+		return $ret;
+		
+	}
+	
+	public function showError(){
+		
+		return $ret = "<h2>Random error occured</h2>";
+		
+	}
+	
+	public function showRegNameError(){
+		
+		$ret = "<h2>Användarnamnet har för få tecken. Minst 3 tecken</h2>";
+		
+		$ret .= $this->showRegisterPage();
+		
+		return $ret;
+		
+	}
+	
+	public function showRegPassError(){
+		
+		$ret = "<h2>Lösenord har för få tecken. Minst 6 tecken</h2>";
+		
+		$ret .= $this->showRegisterPage();
+		
+		return $ret;
+		
+	}
+	
+	public function showRegBothError(){
+		
+		$ret = "<h2>Användarnamnet har för få tecken. Minst 3 tecken</h2>";
+		
+		$ret .= "<h2>Lösenord har för få tecken. Minst 6 tecken</h2>";
+		
+		$ret .= $this->showRegisterPage();
 		
 		return $ret;
 		
