@@ -12,9 +12,9 @@ class LoginView {
 		$userPost;
 		
 		if(isset($_POST["userName"])){
-			$userPost = htmlspecialchars($_POST['userName']);
+			$userPost = filter_var(trim($_POST["userName"]), FILTER_SANITIZE_STRING);
 		} else if(isset($_POST["regName"])){
-			$userPost = htmlspecialchars($_POST['regName']);
+			$userPost = filter_var(trim($_POST["regName"]), FILTER_SANITIZE_STRING);
 		}
 		
 		$this->loginForm .= "
@@ -39,7 +39,7 @@ class LoginView {
 							<fieldset>
 							<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
 							<label>Namn: </label>
-							<input type='text' name='regName'/>
+							<input type='text' name='regName' value='" . $userPost . "'/>
 							<label>Lösenord: </label>
 							<input type='password' name='regPassword'/>
 							<label>Repetera Lösenord: </label>
@@ -133,7 +133,7 @@ class LoginView {
 	
 	public function showPasswordError(){
 		
-		$ret = "<h2>Passwords do not match</h2>";
+		$ret = "<h4>Lösenorden matchar inte</h4>";
 		
 		$ret .= $this->showRegisterPage();
 		
@@ -149,7 +149,7 @@ class LoginView {
 	
 	public function showRegNameError(){
 		
-		$ret = "<h2>Användarnamnet har för få tecken. Minst 3 tecken</h2>";
+		$ret = "<h4>Användarnamnet har för få tecken. Minst 3 tecken</h4>";
 		
 		$ret .= $this->showRegisterPage();
 		
@@ -159,7 +159,7 @@ class LoginView {
 	
 	public function showRegPassError(){
 		
-		$ret = "<h2>Lösenord har för få tecken. Minst 6 tecken</h2>";
+		$ret = "<h4>Lösenord har för få tecken. Minst 6 tecken</h4>";
 		
 		$ret .= $this->showRegisterPage();
 		
@@ -169,14 +169,32 @@ class LoginView {
 	
 	public function showRegBothError(){
 		
-		$ret = "<h2>Användarnamnet har för få tecken. Minst 3 tecken</h2>";
+		$ret = "<h4>Användarnamnet har för få tecken. Minst 3 tecken</h4>";
 		
-		$ret .= "<h2>Lösenord har för få tecken. Minst 6 tecken</h2>";
+		$ret .= "<h4>Lösenord har för få tecken. Minst 6 tecken</h4>";
 		
 		$ret .= $this->showRegisterPage();
 		
 		return $ret;
 		
+	}
+	
+	public function showRegInvalidCharError(){
+		
+		$ret = "<h4>Användarnamnet innehåller ogiltiga tecken</h4>";
+		
+		$ret .= $this->showRegisterPage();
+		
+		return $ret;
+		
+	}
+	
+	public function showRegNotUniqueError(){
+		$ret = "<h4>Användarnamnet är redan upptaget</h4>";
+		
+		$ret .= $this->showRegisterPage();
+		
+		return $ret;		
 	}
 	
 	//Hämtar användarens IP-address och webbläsare
@@ -189,7 +207,7 @@ class LoginView {
 	//Hämtar användarnamn
 	public function getUserName(){
 		if(isset($_POST["userName"])){
-			$userName = filter_var(trim($_POST["userName"]), FILTER_SANITIZE_STRING);
+			$userName = filter_var(trim($_POST["userName"]), FILTER_SANITIZE_STRING);			
 			return $userName;
 		}else{
 			exit();
@@ -199,6 +217,7 @@ class LoginView {
 	public function getPassword(){
 		if(isset($_POST["password"])){
 			$password = filter_var(trim($_POST["password"]), FILTER_SANITIZE_STRING);
+			$password = md5($password);
 			return $password;
 		}else{
 			exit();
@@ -208,7 +227,7 @@ class LoginView {
 	//Hämtar registrerings namn
 	public function getRegName(){
 		if(isset($_POST["regName"])){
-			$regName = filter_var(trim($_POST["regName"]), FILTER_SANITIZE_STRING);
+			$regName = trim($_POST["regName"]);
 			return $regName;
 		}else{
 			exit();

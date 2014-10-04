@@ -79,6 +79,7 @@ class LoginController {
 				if($inputValResult == "inputvalid"){
 					$paramsAreCookies = false;
 					//Kontrollerar användarnamn och lösenord mot tabellen "UserData" i databasen
+					
 					$userValResult = $this->model->validateUser($userName, $password, $paramsAreCookies);
 					
 					if($userValResult == "uservalid"){
@@ -149,23 +150,26 @@ class LoginController {
 			return $this->view->showPasswordError();
 		}
 		
-		$inputOk = $this->model->registryInputValidation($regName, $regPassword);
+		$badInput = $this->model->nameInputValidation($regName);
+		
+		if($badInput != null){
+			return $this->view->showRegInvalidCharError();
+		}
 		
 		$uniqueUser = $this->model->checkUniqueUser($regName);
 		
-		// if validation of name and password is ok...
-		if($inputOk){
-			//System saves the credentials 
-			$this->model->insertUser($regName, $regPassword);
-			
-			//and presents a success message
-			return $this->view->showRegistrySuccess();
-			
-		} else{
-			//4a. Credentials could not be registered (Username already used, wrong username format, Wrong password format.
-			//1. System presents an error message
-			//2. Step 2 in main scenario.
-			return $this->view->showError();
+		if(!$uniqueUser){
+			return $this->view->showRegNotUniqueError();
 		}
+		
+		
+		
+		//System saves the credentials 
+		$this->model->insertUser($regName, $regPassword);
+		
+		//and presents a success message
+		return $this->view->showRegistrySuccess();
+			
+		
 	}		
 }

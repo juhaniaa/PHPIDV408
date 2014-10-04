@@ -88,7 +88,10 @@ class LoginModel {
 	}
 	
 	public function checkPassLength($pass){
-		if(strlen($psss) < 6){
+		
+		$length = strlen($pass);
+		
+		if($length < 6){
 			return false;
 		} else{
 			return true;
@@ -96,23 +99,19 @@ class LoginModel {
 		
 	}
 	
-	public function registryInputValidation($name, $pass){
-		$res = "";
-		
-		$pattern = '/[a-z0-9]+/i'; 
-			
-		if (preg_match($pattern, $name)) {
-			$res = false;
-			
-		}
-		
-		if (preg_match($pattern, $pass)) {
-			$res = false;
-			
-		}
+	public function nameInputValidation($name){
+		$res = null;
+				
+		if (!ctype_alnum($name)) {
+			$name = filter_var($name, FILTER_SANITIZE_STRING);
+			$res = $name;			
+		} 	
 		
 		return $res;
-		
+	}
+	
+	public function checkUniqueUser($name){
+		return $this->dal->checkUniqueUser($name);
 	}
 	
 	//Lagrar användarens IP-adress och webbläsare i sessionsvariabeln "ident"
@@ -138,6 +137,6 @@ class LoginModel {
 	
 	//Lägger till ny användare i tabellen UserData
 	public function insertUser($regName, $regPassword){
-		$this->dal->insertUser($regName, $regPassword);
+		$this->dal->insertUser($regName, md5($regPassword));
 	}
 }

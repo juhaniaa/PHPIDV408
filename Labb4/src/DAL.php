@@ -91,4 +91,18 @@ class DAL {
 			exit();
 		}
 	}
+	
+	public function checkUniqueUser($name){
+		
+		$escUserName = $this->dbc->real_escape_string($name);
+		
+		$result = $this->dbc->query("SELECT username FROM UserData WHERE username='" . $escUserName . "'");
+		
+		if(mysqli_num_rows($result) === 0){
+			return true;
+		}else{
+			return false;
+		}
+	
+	}
 }
