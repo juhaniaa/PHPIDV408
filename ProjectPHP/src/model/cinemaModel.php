@@ -4,19 +4,29 @@ namespace model;
 
 require_once("Movie.php");
 require_once("Show.php");
+require_once("MovieRepository.php");
 
 class cinemaModel{
 	
 	private $movies = array();
 	private $shows = array();
+	private $movieRepository;
+	
+	public function __construct(){
+		$this->movieRepository = new MovieRepository();
+	}
 
 	public function getMovies(){
 		$this->setMovies();
 		return $this->movies;
 	}
 	
+	public function getMovieList(){
+		return $this->movieRepository->getAllMoviesList();
+	}
+	
 	public function getMovieById($id){
-		return new Movie("Movie $id", $id);
+		return new Movie("Movie $id", $id, "Still static data");
 	}
 	
 	public function getShows(){
@@ -26,15 +36,15 @@ class cinemaModel{
 	}
 	
 	public function getShowsByMovie($movieId){
-		$this->movies[] = new Movie("Movie $movieId", $movieId);
+		$this->movies[] = new Movie("Movie $movieId", $movieId, "Nice static");
 		$this->setShows();
 		return $this->shows;
 	}
 	
 	/* temporary help-functions to create static data */
 	private function setMovies(){
-		$this->movies[] = new Movie("Movie 1", 1);
-		$this->movies[] = new Movie("Movie 2", 2);	
+		$this->movies[] = new Movie("Movie 1", 1, "Nice static");
+		$this->movies[] = new Movie("Movie 2", 2, "Cool static");	
 	}
 	
 	private function setShows(){

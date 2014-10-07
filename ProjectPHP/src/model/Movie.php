@@ -3,12 +3,14 @@
 namespace model;
 
 class Movie{
-	private $title;
 	private $id;
+	private $title;
+	private $description;
 	
-	public function __construct($title, $id){
+	public function __construct($title, $id, $description){
 		$this->title = $title;
 		$this->id = $id;
+		$this->description = $description;
 	}
 	
 	public function getTitle(){
@@ -17,5 +19,9 @@ class Movie{
 	
 	public function getId(){
 		return $this->id;
+	}
+	
+	public function getDescription(){
+		return $this->description;
 	}
 }

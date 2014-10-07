@@ -34,7 +34,8 @@ class cinemaController {
 	
 	public function showMovies(){
 		/* UC 1.1 */
-		return $this->view->showMovieList();
+		$movieList = $this->model->getMovieList();
+		return $this->view->showMovieList($movieList);
 	}
 	
 	public function showStart(){

@@ -11,3 +11,4 @@ Application Requirements:
 - BK 2 - Administrator should easily be able to add new movies and their show-times
 - BK 3 - Salesperson should with little effort see a list of shows and how many seats are open
 - BK 4 - Website should be developed in PHP with obeject oriented MVC
+- BK 5 - Movie and show info should be saved in database

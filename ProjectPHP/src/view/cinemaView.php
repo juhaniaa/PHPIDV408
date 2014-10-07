@@ -9,17 +9,18 @@ class cinemaView{
 		$this->model = $model;
 	}
 	
-	public function showMovieList(){
+	public function showMovieList(\model\MovieList $movieList){
 		
 		$ret = "<ul>";
 		
-		$movies = $this->model->getMovies();
-	
-		foreach ($movies as $movie) {
-		
+		foreach ($movieList->toArray() as $movie) {
+			
 			$movieTitle = $movie->getTitle();
 			$movieId = $movie->getId();
+			$movieDesc = $movie->getDescription();
+			
 			$movieNav = \view\navView::getMovieNav($movieTitle, $movieId);
+			
 			$ret .= $movieNav;
 		}
 		
