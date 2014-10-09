@@ -29,10 +29,10 @@ class MovieRepository extends base\Repository{
 		
 	}
 	
-	public function getById($id){
+	public function getMovieById($id){
 		$db = $this->connection();
 		
-		$sql = "SELECT FROM $this->dbTable WHERE " . self::$key . " = ?";
+		$sql = "SELECT * FROM $this->dbTable WHERE " . self::$key . " = ?";
 		$params = array($id);
 		
 		$query = $db->prepare($sql);
@@ -54,7 +54,7 @@ class MovieRepository extends base\Repository{
 		try{
 			$db = $this->connection();
 			
-			$sql = "SELECT * FROM CinMovies";
+			$sql = "SELECT * FROM $this->dbTable";
 				
 			$query = $db->prepare($sql);
 			
@@ -87,7 +87,7 @@ class MovieRepository extends base\Repository{
 	
 	// return list of movies that have a show
 	// should this be in showRepository???
-	public function getAvailableMovies(){
+	public function getAvailableMoviesList(){
 		
 		
 	}

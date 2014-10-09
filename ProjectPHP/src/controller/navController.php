@@ -1,11 +1,29 @@
 <?php
 
 namespace controller;
+
 require_once("./src/view/navView.php");
 require_once("./src/controller/cinemaController.php");
 
+require_once("./login/view/loginView.php");
+require_once("./login/controller/loginController.php");
+
 class navController{
 	public function doControll(){
+		
+		$loginController = new \login\controller\loginController();
+		return $loginController->authenticate();
+		
+		// getTypeOfUser()
+		
+		// Customer
+		
+		// SalesPerson
+		
+		// Admin
+		
+		// Unlogged
+		
 		$controller;
 		
 		switch(\view\navView::getAction()){

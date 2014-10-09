@@ -49,7 +49,9 @@ class cinemaController {
 	
 	public function showMovieInfo(){
 		/* UC 1.3 */
-		return $this->view->showMovieInfo();
+		$MovieId = \view\navView::getMovieId();
+		$chosenMovie = $this->model->getMovieById($MovieId);
+		return $this->view->showMovieInfo($chosenMovie);
 	}
 	
 }

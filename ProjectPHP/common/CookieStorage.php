@@ -1,9 +1,12 @@
 <?php
 
+namespace common;
+
 class CookieStorage {
 
 	public function save($cookieName, $cookieInfo) {
 		setcookie($cookieName, $cookieInfo, time()+3600);
+		$_COOKIE[$cookieName] = $cookieInfo;
 	}
 
 	public function load($cookieName) {

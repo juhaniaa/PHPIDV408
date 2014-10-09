@@ -29,14 +29,15 @@ class cinemaView{
 		return $ret;
 	}
 	
-	public function showMovieInfo(){
+	public function showMovieInfo(\model\Movie $movie){
 		
 		$ret = "<ul>";
-		$MovieId = \view\navView::getMovieId();
-		$chosenMovie = $this->model->getMovieById($MovieId);
-		$title = $chosenMovie->getTitle();
-		$id = $chosenMovie->getId();
-		$ret .= "<li>Title: $title</li><li>Id: $id</li>";
+		//$MovieId = \view\navView::getMovieId();
+		//$chosenMovie = $this->model->getMovieById($MovieId);
+		$title = $movie->getTitle();
+		$id = $movie->getId();
+		$desc = $movie->getDescription();
+		$ret .= "<li>Title: $title</li><li>Id: $id</li><li>Description: $desc</li>";
 		$ret .= "</ul>";
 		
 		$ret .= "<h2>Shows</h2>";

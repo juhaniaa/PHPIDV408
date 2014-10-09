@@ -26,7 +26,7 @@ class cinemaModel{
 	}
 	
 	public function getMovieById($id){
-		return new Movie("Movie $id", $id, "Still static data");
+		return $this->movieRepository->getMovieById($id);
 	}
 	
 	public function getShows(){

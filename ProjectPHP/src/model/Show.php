@@ -12,8 +12,7 @@ class Show{
 	}
 	
 	public function getInfo(){
-		$info = "";
-		$info .= $this->movie->getTitle();
+		$info = $this->movie->getTitle();
 		return $info;
 	}
 	
