@@ -56,9 +56,12 @@ class LoginModel{
 		
 		$result = $query->fetch();
 		
-		
 		if($result){
-			$_SESSION["logged"] = $clientId;
+			$aip = $clientId[0];
+			$bip = $clientId[1];
+			$agent = $clientId[2];
+
+			$_SESSION["logged"] = hash("sha256", $aip . $bip . $agent);
 			$_SESSION["loggedUser"] = $user;
 			return true;
 		} else {
@@ -77,24 +80,22 @@ class LoginModel{
 		
 		$db = $this->connection();
 		
-		$sql = "SELECT * FROM " . self::$tempUserTable . "WHERE " . self::$name . " = ? AND " . self::$password . " = ?";
-		$params = array($user, $pass);
+		$sql = "SELECT * FROM " . self::$tempUserTable . " WHERE " . self::$name . " = ? ORDER BY " . self::$timestamp . " DESC";
+		$params = array($user);
 		
 		$query = $db->prepare($sql);
 		$query->execute($params);
 		
 		$result = $query->fetch();
 		
-		// check if many entries??????
-		
 		$now = time();
-		$then = $result[self::$timestamp];
-		
+		$then = (int)$result[self::$timestamp];	
+	
 		if(($now - $then) <= self::$cookieTimer){
-			// difference less than 5 min?
+			
 			return $this->loginUser($user, $pass, $clientId);
 		} else {
-			return false;
+			return null;
 		}
 	}
 	
@@ -127,9 +128,7 @@ class LoginModel{
 			return false;
 		} else {
 			return true;
-		}
-	
-		
+		}	
 	}
 	
 	public function storeCookieTime($user){
@@ -151,9 +150,15 @@ class LoginModel{
 	
 	public function isUserLogged($client){
 		
+		$aip = $client[0];
+		$bip = $client[1];
+		$agent = $client[2];
+		
+		$ident = hash("sha256", $aip . $bip . $agent);
+		
 		if(isset($_SESSION["logged"])){
-			if($_SESSION["logged"] == $client){
-				return $_SESSION["logged"];
+			if($_SESSION["logged"] == $ident){
+				return true;
 			}
 		} 
 		return false;

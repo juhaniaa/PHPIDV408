@@ -21,7 +21,7 @@ class LoginController{
 		
 
 		// if user is  logged
-		if($this->model->isUserLogged($this->view->getClientIdentifier())){
+		if($this->model->isUserLogged($this->view->getServerInfo())){
 			
 			/* Use Case 2 Logging out an authenticated user */
 			return $this->logoutUser();
@@ -62,39 +62,31 @@ class LoginController{
 		 	// UC 1 3: user provides username and password
 			$inpName = $this->view->getInputName(false);
 			
-			
-			
 			if($inpName == null){
 				$this->view->storeMessage("Användarnamn saknas");
 				return $this->view->showLogin(false);
 			}
 			
 			$inpPass = $this->view->getInputPassword(false);
-			
-			
+
 			if($inpPass == null){
 				$this->view->storeMessage("Lösenord saknas");
 				return $this->view->showLogin(false);
 			}
-			
-			
+					
 			// UC 1 3a: user wants system to keep user credentials for easier login
 			$keepCreds = $this->view->keepCredentials();
 			
 			// UC 1 4: authenticate user...
-			$answer = $this->model->loginUser($inpName, $inpPass, $this->view->getClientIdentifier());
+			$answer = $this->model->loginUser($inpName, $inpPass, $this->view->getServerInfo());
 			
 			// UC 1 4a: user could not be authenticated
 			if($answer === false){
 				
 				// 1. System presents an error message
 				// 2. Step 2 in main scenario
-				
 				$this->view->storeUserInput($inpName);
-				
-				// no more // redirects to self
 				$this->view->storeMessage("Felaktigt användarnamn och/eller lösenord");
-				
 				return $this->view->showLogin(false);
 				
 			} else {
@@ -104,18 +96,13 @@ class LoginController{
 					// UC 1 3a-1: ...system presents that...the user credentials were saved
 					$this->view->storeCredentials($inpName, $inpPass);
 					$this->model->storeCookieTime($inpName);
-					
-					// no more /* redirects to self */
 					$this->view->storeMessage("Inloggning lyckades och vi kommer ihåg dig nästa gång");
 					
 				} else {
 					
 					// ...and present success message
-					
-					//no more /* redirects to self */
 					$this->view->storeMessage("Inloggningen lyckades");
-				}
-				
+				}	
 				return $this->view->showLogin(true);
 			}
 		} else {
@@ -151,27 +138,23 @@ class LoginController{
 		
 		// UC 3 1: User wants to authenticate with saved credentials
 			// - System authenticates the user and presents that the authentication succeeded and that it happened with saved credentials
-		$inpName = $this->view->getInputName(true);
-		
+		$inpName = $this->view->getInputName(true);	
 		$inpPass = $this->view->getInputPassword(true);
 
-		$answer = $this->model->loginCredentialsUser($inpName, $inpPass, $this->view->getClientIdentifier());
+		$answer = $this->model->loginCredentialsUser($inpName, $inpPass, $this->view->getServerInfo());
 		
-		if($answer){
+		if($answer == null){
+			$this->view->showLogin(false);
 			
-			// no more/* redirects to self */
+		} else if($answer == true){		
 			$this->view->storeMessage("Inloggning lyckades via cookies");
-			$this->view->showLogin(true);
-		} else {
-			
+			return $this->view->showLogin(true);
+		} else {		
 			// 2a. The user could not be authenticated (too old credentials > 30 days) (Wrong credentials) Manipulated credentials.
 				// 1. System presents error message
-				// Step 2 in UC 1
-				
+				// Step 2 in UC 1				
 			$this->view->removeCredentials();
-				
-			/* redirects to self */
-			$this->view->storeMessage("Felaktig information i cookie");
+			$this->view->storeMessage("Felaktig eller föråldrad information i cookie");
 			return $this->view->showLogin(false);
 		}
 	}	
@@ -209,7 +192,6 @@ class LoginController{
 		}
 		
 		$badInput = $this->model->nameInputValidation($regName);
-		
 		
 		if($badInput != null){
 			$this->view->storeMessage("Användarnamnet innehåller felaktiga tecken");

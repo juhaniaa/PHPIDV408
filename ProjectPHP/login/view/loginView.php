@@ -25,6 +25,14 @@ class LoginView{
 		return $_SERVER["HTTP_USER_AGENT"];
 	}
 	
+	//Hämtar användarens IP-address och webbläsare
+	public function getServerInfo(){
+		$aip = $_SERVER["REMOTE_ADDR"];
+		$bip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		$agent = $_SERVER["HTTP_USER_AGENT"];
+		return array($aip, $bip, $agent); 
+	}
+	
 	// did user press "log in"
 	public function userTryLogin(){		
 		if(isset($_POST["login"])){
