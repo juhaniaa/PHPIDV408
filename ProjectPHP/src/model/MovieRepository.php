@@ -18,7 +18,7 @@ class MovieRepository extends base\Repository{
 		$this->dbTable = self::$movieTable;
 	}
 	
-	public function add(Movie $movie){
+	public function addMovie(Movie $movie){
 		$db = $this->connection();
 		
 		$sql = "INSERT INTO $this->dbTable (" . self::$title . ", " . self::$description . ") VALUES (?, ?)";
@@ -41,7 +41,7 @@ class MovieRepository extends base\Repository{
 		$result = $query->fetch();
 		
 		if($result){
-			$movie = new \model\Movie($result[self::$title], $result[self::$key], $result[self::$description]);
+			$movie = new Movie($result[self::$title], $result[self::$key], $result[self::$description]);
 			return $movie;
 		} else {
 			return null;

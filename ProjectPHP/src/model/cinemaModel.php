@@ -5,20 +5,18 @@ namespace model;
 require_once("Movie.php");
 require_once("Show.php");
 require_once("MovieRepository.php");
+require_once("ShowRepository.php");
 
 class cinemaModel{
 	
 	private $movies = array();
 	private $shows = array();
 	private $movieRepository;
+	private $showRepository;
 	
 	public function __construct(){
 		$this->movieRepository = new MovieRepository();
-	}
-
-	public function getMovies(){
-		$this->setMovies();
-		return $this->movies;
+		$this->showRepository = new ShowRepository();
 	}
 	
 	public function getMovieList(){
@@ -29,30 +27,11 @@ class cinemaModel{
 		return $this->movieRepository->getMovieById($id);
 	}
 	
-	public function getShows(){
-		$this->setMovies();
-		$this->setShows();
-		return $this->shows;
+	public function getShowsByDateList($showDate){
+		return $this->showRepository->getShowsByDateList($showDate);
 	}
 	
-	public function getShowsByMovie($movieId){
-		$this->movies[] = new Movie("Movie $movieId", $movieId, "Nice static");
-		$this->setShows();
-		return $this->shows;
-	}
-	
-	/* temporary help-functions to create static data */
-	private function setMovies(){
-		$this->movies[] = new Movie("Movie 1", 1, "Nice static");
-		$this->movies[] = new Movie("Movie 2", 2, "Cool static");	
-	}
-	
-	private function setShows(){
-		foreach ($this->movies as $movie) {
-			
-			$dateTime = \DateTime::createFromFormat('d/m/Y/H/i', '21/04/2015/14/30');
-			
-			$this->shows[] = new Show($movie, $dateTime);	
-		}
+	public function getShowsByMovieIdList($movieId){
+		return $this->showRepository->getShowsByMovieIdList($movieId);
 	}
 }

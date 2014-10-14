@@ -29,38 +29,51 @@ class cinemaView{
 		return $ret;
 	}
 	
-	public function showMovieInfo(\model\Movie $movie){
+	public function showMovieInfo(\model\Movie $movie, \model\ShowList $showList){
 		
 		$ret = "<ul>";
-		//$MovieId = \view\navView::getMovieId();
-		//$chosenMovie = $this->model->getMovieById($MovieId);
 		$title = $movie->getTitle();
 		$id = $movie->getId();
 		$desc = $movie->getDescription();
-		$ret .= "<li>Title: $title</li><li>Id: $id</li><li>Description: $desc</li>";
+		$ret .= "<li>Title: $title</li><li>Description: $desc</li>";
 		$ret .= "</ul>";
 		
 		$ret .= "<h2>Shows</h2>";
 		$ret .= "<ul>";
-		$shows = $this->model->getShowsByMovie($MovieId);
-		foreach ($shows as $show) {
-			$showInfo = $show->getDateTime();
-			$ret .= "<li>$showInfo</li>";
+		
+		$showList = $showList->toArray();
+
+		foreach ($showList as $show) {
+			$showDate = $show->getShowDate();
+			$showTime = $show->getShowTime();
+			$ret .= "<li>$showDate $showTime</li>";
 		}
 		$ret .= "</ul>";
 		return $ret;
 		
 	}
 	
-	public function showShowList(){
-		$ret = "<ul>";
+	public function showShowList(\model\ShowList $showList, $showDate){
+		$ret = "";
+
+		$ret .= "<form action='index.php?action=" . \view\navView::$actionChangeShowDate . "' method='post'>
+					<label>Date: </label>
+					<input type='text' name='" . \view\navView::$postDate . "' id='datepicker'>
+					<input type='submit' value='Go to date'>
+				</form>";
 		
-		$shows = $this->model->getShows();
+		$ret .= "<ul>";
 		
-		foreach ($shows as $show) {
-			$showInfo = $show->getInfo();
-			$showDate = $show->getDateTime();
-			$ret .= '<li>' . $showInfo . ' ' . $showDate .'</li>';
+		$showList = $showList->toArray();
+		
+		if(count($showList) == 0){
+			$ret .= "<li>No shows found for this date</li>";
+		} else {
+			foreach ($showList as $show) {
+				$showInfo = $show->getInfo();
+				$showTime = $show->getShowTime();
+				$ret .= '<li>' . $showInfo .' ' . $showTime . '</li>';
+			}
 		}
 
 		$ret .= "</ul>";

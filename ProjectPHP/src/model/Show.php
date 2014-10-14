@@ -3,12 +3,12 @@
 namespace model;
 
 class Show{
-	private $showDate;
+	private $showDateTime;
 	private $movie;
 	
-	public function __construct(Movie $movie, \DateTime $showDate){
+	public function __construct(Movie $movie, \DateTime $showDateTime){
 		$this->movie = $movie;
-		$this->showDate = $showDate->format('d-m-Y H:i');
+		$this->showDateTime = $showDateTime;
 	}
 	
 	public function getInfo(){
@@ -16,9 +16,13 @@ class Show{
 		return $info;
 	}
 	
-	public function getDateTime(){
-		$ret = $this->showDate;
+	public function getShowDate(){
+		$ret = $this->showDateTime->format("d/m/Y");
 		return $ret;
 	}
-
+	
+	public function getShowTime(){
+		$time = $this->showDateTime->format("H:i");
+		return $time;
+	}
 }
