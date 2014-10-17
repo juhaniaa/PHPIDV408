@@ -15,11 +15,10 @@ class LoginModel{
 	private static $cookieTimer = 300;
 	
 	public function __construct(){
-		//$this->dbTable = self::$movieTable;
+		
 	}
 	
 	protected $dbConnection;
-	protected $dbTable;
 	
 	protected function connection() {
 		try{
@@ -34,6 +33,18 @@ class LoginModel{
 			var_dump($ex);
 		
 		}
+	}
+	
+	public function getRole(){
+		if(isset($_SESSION["role"])){
+			return $_SESSION["role"];
+		} else {
+			return \model\Role::$anonymous;
+		}
+	}
+	
+	public function getUser(){
+		return $_SESSION["userId"];
 	}
 	
 	public function getCookieTimer(){
@@ -60,9 +71,14 @@ class LoginModel{
 			$aip = $clientId[0];
 			$bip = $clientId[1];
 			$agent = $clientId[2];
+			$role = $result["role"];
+			$userId = $result["uniqueId"];
 
 			$_SESSION["logged"] = hash("sha256", $aip . $bip . $agent);
 			$_SESSION["loggedUser"] = $user;
+			$_SESSION["role"] = $role;
+			$_SESSION["userId"] = $userId;
+			
 			return true;
 		} else {
 			return false;
@@ -73,6 +89,8 @@ class LoginModel{
 		
 		unset($_SESSION["logged"]);
 		unset($_SESSION["loggedUser"]);
+		unset($_SESSION["role"]);
+		unset($_SESSION["userId"]);
 		return true;
 	}
 	

@@ -5,15 +5,26 @@ namespace model;
 class Show{
 	private $showDateTime;
 	private $movie;
+	private $showId;
 	
-	public function __construct(Movie $movie, \DateTime $showDateTime){
+	public function __construct(Movie $movie, \DateTime $showDateTime, $showId){
 		$this->movie = $movie;
 		$this->showDateTime = $showDateTime;
+		$this->showId = $showId;
 	}
 	
-	public function getInfo(){
-		$info = $this->movie->getTitle();
-		return $info;
+	public function getTitle(){
+		$ret = $this->movie->getTitle();
+		return $ret;
+	}
+	
+	public function getMovieId(){
+		$ret = $this->movie->getId();
+		return $ret;
+	}
+
+	public function getShowId(){
+		return $this->showId;	
 	}
 	
 	public function getShowDate(){

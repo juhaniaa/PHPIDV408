@@ -9,6 +9,7 @@ require_once("./login/view/loginView.php");
 require_once("./login/controller/loginController.php");
 
 require_once("./src/view/AppContent.php");
+require_once("./src/model/Role.php");
 
 class navController{
 	public function doControll(){
@@ -19,6 +20,8 @@ class navController{
 		
 		$loginController = new \login\controller\loginController();
 		$loginHtml = $loginController->authenticate();
+		
+		$role = $loginController->getRole();
 		
 		// TODO: Different options for userTypes
 		// TODO: also get type of user? - string in db?
@@ -57,6 +60,27 @@ class navController{
 				$controller = new cinemaController();
 				$cinemaBody = $controller->showMovieInfo();
 				break;
+				
+			case \view\navView::$actionBookTicket;
+				/* UC 1.4 and UC 2.6 */
+				$controller = new cinemaController();
+				$cinemaBody = $controller->bookTicket($role); // let user choose amount?
+				break;	
+				
+			case \view\navView::$actionDoTicket;
+				/* some1 pressed getTicket */
+				$controller = new cinemaController();
+				
+				$user = $loginController->getUser();
+				
+				if($controller->ticketIsSet() && $user){
+					$cinemaBody = $controller->doReserveTicket($user);
+				} else {
+					$controller = new cinemaController();
+					$cinemaBody = $controller->showStart();
+				}
+				
+				break;	
 			
 			default:
 				/* UC 4.1 */
@@ -65,6 +89,6 @@ class navController{
 				break;	
 		}
 		
-		return new \view\AppContent($loginHtml, $cinemaBody);
+		return new \view\AppContent($loginHtml, $cinemaBody, $role);
 	}	
 }

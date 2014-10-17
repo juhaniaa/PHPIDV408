@@ -49,4 +49,61 @@ class cinemaController {
 		return $this->view->showMovieInfo($chosenMovie, $showList);
 	}
 	
+	public function bookTicket($role){
+		
+		$showId = \view\navView::getShowId();
+		$chosenShow = $this->model->getShowById($showId);
+	
+		switch($role){
+			
+			case \model\Role::$customer;
+				/* UC 1.4 */
+				//if customer -> let book ticket
+				return $this->view->showCustomerTicket($chosenShow);
+				break;
+				
+			case \model\Role::$salesPerson;
+				/* UC 2.6 */
+				// if salesperson -> let book ticket for cashier-ticket
+				return $this->view->showSalesTicket($chosenShow);
+				break;
+				
+			case \model\Role::$administrator;
+				return $this->view->showAdminTicket($chosenShow);
+				break;
+	
+			default:
+				return $this->view->showAnonTicket($chosenShow);
+				break;	
+		}
+		
+		
+	}
+	
+	public function ticketIsSet(){
+		$showId = $this->view->getTicketShow();
+		$amount = $this->view->getTicketAmount();
+		
+		if($showId && $amount){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function doReserveTicket($userId){
+		
+		$showId = $this->view->getTicketShow();
+		$amount = $this->view->getTicketAmount();
+		
+		$result = $this->model->doReserveTicket($showId, $amount, $userId);
+		
+		if($result){
+			return $this->view->showTicketReservedSuccess();
+		} else{
+			return $this->view->showTicketReservedError();
+		}
+		
+	}
+	
 }

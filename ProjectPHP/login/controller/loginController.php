@@ -15,6 +15,14 @@ class LoginController{
 		$this->view = new \login\view\LoginView($this->model);
 	}
 	
+	public function getRole(){
+		return $this->model->getRole();
+	}
+	
+	public function getUser(){
+		return $this->model->getUser();
+	}
+	
 	public function authenticate(){
 		
 		// return a html representation of either logged in or logged out with possibility to log in

@@ -10,6 +10,7 @@ class ShowRepository extends base\Repository{
 	
 	private static $showDate = "sDate";
 	private static $showTime = "sTime";
+	private static $showKey = "uniqueShow";
 	private static $movieTitle = "title";
 	private static $movieDescription = "description";
 	private static $movieKey = "uniqueKey";
@@ -50,7 +51,7 @@ class ShowRepository extends base\Repository{
 					
 					$sDateTime = new \DateTime($dbShow[self::$showDate] . $dbShow[self::$showTime]);
 					
-					$show = new Show($movie, $sDateTime);
+					$show = new Show($movie, $sDateTime, $dbShow[self::$showKey]);
 
 					$showList->addShow($show);
 				}
@@ -89,7 +90,7 @@ class ShowRepository extends base\Repository{
 					
 					$sDateTime = new \DateTime($dbShow[self::$showDate] . $dbShow[self::$showTime]);
 					
-					$show = new Show($movie, $sDateTime);
+					$show = new Show($movie, $sDateTime, $dbShow[self::$showKey]);
 
 					$showList->addShow($show);
 				}
@@ -102,6 +103,28 @@ class ShowRepository extends base\Repository{
 		} catch(PDOException $e){
 			print "Error!: " . $e->getMessage() . "</br>";
 			die();
+		}
+	}
+	
+	public function getShowById($showId){
+		$db = $this->connection();
+		
+		$sql = "SELECT * FROM $this->dbTable WHERE " . self::$showKey . " = ?";
+		$params = array($showId);
+		
+		$query = $db->prepare($sql);
+		$query->execute($params);
+	
+		$result = $query->fetch();
+
+		
+		if($result){
+			$movie = new Movie($result[self::$movieTitle], $result[self::$movieKey], $result[self::$movieDescription]);
+			$sDateTime = new \DateTime($result[self::$showDate] . $result[self::$showTime]);
+			$show = new Show($movie, $sDateTime, $result[self::$showKey]);
+			return $show;
+		} else {
+			return null;
 		}
 	}
 }
