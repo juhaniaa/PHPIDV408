@@ -265,7 +265,8 @@ class LoginView{
 	
 	// show Date-message in swedish
 	public function showDate(){
-		return "<p>" . $this->svDay[date("D")] . ", den " . date("d") . " " . $this->svMonth[date("m")]  . " år " . date("Y") . ". Klockan är " . date("H:i:s") . ".</p>";
+		return "";
+		//return "<p>" . $this->svDay[date("D")] . ", den " . date("d") . " " . $this->svMonth[date("m")]  . " år " . date("Y") . ". Klockan är " . date("H:i:s") . ".</p>";
 	}
 	
 	/* SHOW END */

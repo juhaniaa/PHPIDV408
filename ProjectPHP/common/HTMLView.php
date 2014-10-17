@@ -1,8 +1,10 @@
 <?php
 
+namespace view;
+
 class HTMLView {
 
-		public function echoHTML($body) {
+		public function echoHTML(AppContent $content) {
 			$html = "
 				<!DOCTYPE html>
 				<html>
@@ -16,10 +18,11 @@ class HTMLView {
 				</head>
 				
 				<body>";
+			
+			$html .= $content->getLoginHtml();
 			$html .=  \view\navView::getMenu();
-			$html .= "
-				$body
-				</body>
+			$html .= $content->getCinemaBody();
+			$html .= "</body>
 				</html>";
 				
 			echo $html;

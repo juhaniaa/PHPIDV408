@@ -18,7 +18,7 @@ class LoginController{
 	public function authenticate(){
 		
 		// return a html representation of either logged in or logged out with possibility to log in
-		
+		// also return typeOfUser???
 
 		// if user is  logged
 		if($this->model->isUserLogged($this->view->getServerInfo())){
