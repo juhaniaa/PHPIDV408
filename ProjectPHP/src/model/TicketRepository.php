@@ -18,7 +18,7 @@ class TicketRepository extends base\Repository{
 	}
 	
 	public function doReserveTicket($showId, $amount, $userId){
-
+		
 		$db = $this->connection();
 		
 		$sql = "INSERT INTO $this->dbTable (" . self::$showKey . ", " . self::$userKey . ", " . self::$amount . ") VALUES (?, ?, ?)";

@@ -4,7 +4,7 @@ $(function() {
     $("#datepicker").datepicker({ minDate: -20, maxDate: "+1M +10D" });
     $("#datepicker").datepicker( "option", "dateFormat", 'yy-mm-dd' );
        
-    var date = new Date(getUrlParameter("show"));
+    var date = new Date(getUrlParameter("showDate"));
     
   	$("#datepicker").datepicker("setDate", date);
 });

@@ -18,14 +18,20 @@ class MovieRepository extends base\Repository{
 		$this->dbTable = self::$movieTable;
 	}
 	
-	public function addMovie(Movie $movie){
+	public function doAddMovie($movieTitle, $movieDesc){
 		$db = $this->connection();
 		
 		$sql = "INSERT INTO $this->dbTable (" . self::$title . ", " . self::$description . ") VALUES (?, ?)";
-		$params = array($movie->getTitle(), $movie->getDescription());
+		$params = array($movieTitle, $movieDesc);
 		
 		$query = $db->prepare($sql);
-		$query->execute($params);
+		$result = $query->execute($params);
+		
+		if($result){
+			return true;
+		} else {
+			return false;
+		}
 		
 	}
 	

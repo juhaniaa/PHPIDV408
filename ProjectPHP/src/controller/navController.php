@@ -22,9 +22,6 @@ class navController{
 		$loginHtml = $loginController->authenticate();
 		
 		$role = $loginController->getRole();
-		
-		// TODO: Different options for userTypes
-		// TODO: also get type of user? - string in db?
 				
 		// Customer
 		
@@ -34,58 +31,62 @@ class navController{
 		
 		// Unlogged
 		
-		$controller;
+		$cinemaController = new cinemaController($role);
 		
 		switch(\view\navView::getAction()){
 			/* UC 1.1 */
 			case \view\navView::$actionShowMovies;
-				$controller = new cinemaController();
-				$cinemaBody = $controller->showMovies();
+				$cinemaBody = $cinemaController->showMovies();
 				break;
 				
 			case \view\navView::$actionChangeShowDate;
 				/* UC 1.2b */
-				$controller = new cinemaController();
-				$controller->changeShowDate(); // redirects to self via header->location after changing the date
+				$cinemaController->changeShowDate(); // redirects to self via header->location after changing the date
 				break;
 				
 			case \view\navView::$actionShowShows;
 				/* UC 1.2 */
-				$controller = new cinemaController();
-				$cinemaBody = $controller->showShowsByDate();
+				$cinemaBody = $cinemaController->showShowsByDate();
 				break;
 			
 			case \view\navView::$actionShowMovieInfo;
 				/* UC 1.3 */
-				$controller = new cinemaController();
-				$cinemaBody = $controller->showMovieInfo();
+				$cinemaBody = $cinemaController->showMovieInfo();
 				break;
 				
 			case \view\navView::$actionBookTicket;
 				/* UC 1.4 and UC 2.6 */
-				$controller = new cinemaController();
-				$cinemaBody = $controller->bookTicket($role); // let user choose amount?
+				$cinemaBody = $cinemaController->showBookTicket($role); // let user choose amount?
 				break;	
 				
 			case \view\navView::$actionDoTicket;
 				/* some1 pressed getTicket */
-				$controller = new cinemaController();
 				
 				$user = $loginController->getUser();
 				
-				if($controller->ticketIsSet() && $user){
-					$cinemaBody = $controller->doReserveTicket($user);
+				if($cinemaController->ticketIsSet() && $user){
+					$cinemaBody = $cinemaController->doReserveTicket($user);
 				} else {
-					$controller = new cinemaController();
-					$cinemaBody = $controller->showStart();
+					$cinemaController->goToStart(); // redirects to self via header->location
 				}
 				
 				break;	
+				
+			case \view\navView::$actionShowAddMovie;
+				$cinemaBody = $cinemaController->showAddMovie();
+				break;
+				
+			case \view\navView::$actionDoAddMovie;
+				$cinemaBody = $cinemaController->doAddMovie();
+				break;
+				
+			case \view\navView::$actionDoAddShow;
+				$cinemaBody = $cinemaController->doAddShow();
+				break;
 			
 			default:
 				/* UC 4.1 */
-				$controller = new cinemaController();
-				$cinemaBody = $controller->showStart();
+				$cinemaBody = $cinemaController->showStart();
 				break;	
 		}
 		

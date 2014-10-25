@@ -103,7 +103,7 @@ Output
 TC 1.4.4 Failed booking with invalid number
 -------------------------------------------
 1 Follow steps 1 and 2 in TC 1.4.2 Book ticket to show by shows list
-2 Input ten
+2 Input: ten
 3 Choose book ticket
 
 Output

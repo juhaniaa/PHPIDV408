@@ -200,7 +200,7 @@ class LoginView{
 			
 			$user = $this->model->getUserName();
 			
-			$ret .= "<h1>Welcome " . $user . "</h1>
+			$ret .= "<h2>Welcome " . $user . "</h2>
 			<p>" . $msg . "</p>
 			<form action='index.php' method='post'>
 				<input type='submit' name='logout' value='Log out'>
@@ -208,7 +208,7 @@ class LoginView{
 		
 		} else {
 		
-			$ret .= '<h1>Ej inloggad</h1>
+			$ret .= '
 			<form action="index.php" method="post">
 				<fieldset>
 					<legend>Login - Input username and password</legend>
@@ -217,10 +217,11 @@ class LoginView{
 					<input type="text" name="LoginView::usrNameId" id="usrNameId" value="' . $userInput . '">
 					<label for="passwordId">Password:</label>
 					<input type="password" name="LoginView::passwordId" id="passwordId">
-					<label for="keepLoggedId">Save credentials:</label>
+					<label class="setInline" for="keepLoggedId">Save credentials:</label>
 					<input type="checkbox" name="LoginView::Logged" id="keepLoggedId">
+					<label></label>
 					<input type="submit" name="login" value="Log in">
-					<input type="submit" name="register" value="Registrera ny användare"/>
+					<input type="submit" name="register" value="Registrer"/>
 				</fieldset>
 			</form>';
 			
@@ -237,25 +238,22 @@ class LoginView{
 		
 		$userInput = $this->message->load($this->cookieUser);
 		
-		$ret .= "<a href='index.php'>Tillbaka</a>";
-		
-		$ret .= "<h2>Ej inloggad, Registrerar användare</h2>";
-		
 		$ret .= "
 		<form action='index.php' method='post'>
 			<fieldset>
-				<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
+				<legend>Register new user</legend>
 				<p>$msg</p>
-				<label>Namn: </label>
+				<label>Username: </label>
 				<input type='text' name='regName' value='" . $userInput . "'/>
-				<label>Lösenord: </label>
+				<label>Password: </label>
 				<input type='password' name='regPassword'/>
-				<label>Repetera Lösenord: </label>
+				<label>Repeat Password: </label>
 				<input type='password' name='regRepeatPassword'/>
-				<label>Skicka: </label>
-				<input type='submit' name='doRegister' value='Registrera'/>
+				<input type='submit' name='doRegister' value='Register'/>
 			</fieldset>
 		</form>";
+		
+		$ret .= "<a href='index.php'>Back to login</a>";
 		
 		$ret .= $this->showDate();
 		return $ret;

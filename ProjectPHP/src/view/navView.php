@@ -17,12 +17,15 @@ class navView{
 	public static $actionChangeShowDate = "changeDate";
 	public static $actionBookTicket = "ticket";
 	public static $actionDoTicket = "getTicket";
+	public static $actionShowAddMovie = "showAddMovie";
+	public static $actionDoAddMovie = "doAddMovie";
+	public static $actionDoAddShow = "doAddShow";
 	
 	public static function getMenu(){
 		$html = "<div id='menu'><ul>";
-		$html .="<li><a href='?" . self::$action . "=" . self::$actionShowStart . "'>Start</a></li>";
-		$html .="<li><a href='?" . self::$action . "=" . self::$actionShowMovies . "'>Movies</a></li>";
-		$html .="<li><a href='?" . self::$action . "=" . self::$actionShowShows . "&" . self::$show . "=" . self::getTodayDate() . "'>Shows</a></li>";
+		$html .="<li><a class='menuAtag' href='?" . self::$action . "=" . self::$actionShowStart . "'>Start</a></li>";
+		$html .="<li><a class='menuAtag' href='?" . self::$action . "=" . self::$actionShowMovies . "'>Movies</a></li>";
+		$html .="<li><a class='menuAtag' href='?" . self::$action . "=" . self::$actionShowShows . "&" . self::$show . "=" . self::getTodayDate() . "'>Shows</a></li>";
 		$html .="</ul></div>";
 		return $html;
 	}
@@ -45,13 +48,13 @@ class navView{
 		return $ret;
 	}
 	
-	/*public static function getDateNav(){
-		$ret = '<li><a href="?' . self::$action . '=' . self::$actionShowShows . '&' . self::$show . '=';
-		return $ret;
-	}*/
-	
 	public function getTicketNav($showId){
 		$ret = '<a href="?' . self::$action . '=' . self::$actionBookTicket . '&' . self::$ticket . '=' . $showId . '">Ticket</a>';
+		return $ret;		
+	}
+	
+	public function getAddMovieNav(){
+		$ret = '<a href="?' . self::$action . '=' . self::$actionShowAddMovie . '">Add Movie</a>';
 		return $ret;		
 	}
 	
@@ -66,6 +69,10 @@ class navView{
 	public static function setShowDate(){
 		$showDate = $_POST[self::$postDate];
 		header("Location: ?" . self::$action . "=" . self::$actionShowShows . "&" . self::$show . "=" . $showDate);
+	}
+	
+	public function goToStart(){
+		header("Location: ?" . self::$action . "=" . self::$actionShowStart);
 	}
 	
 	public static function getShowId(){

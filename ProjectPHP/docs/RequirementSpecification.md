@@ -36,6 +36,7 @@ Use-cases:
 		- UC 1.2b Customer views list of all shows on a specific date
 	- UC 1.3 Customer views specific movie information
 	- UC 1.4 Cusomter books tickets to specific show
+	- UC 1.5 Customer views his/her tickets to upcoming shows
 	
 2. Salesperson
 	- UC 2.1 Salesperson views list of shows on a specific date

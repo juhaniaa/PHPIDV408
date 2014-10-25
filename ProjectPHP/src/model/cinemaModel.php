@@ -43,7 +43,14 @@ class cinemaModel{
 	}
 	
 	public function doReserveTicket($showId, $amount, $userId){
-		
 		return $this->ticketRepository->doReserveTicket($showId, $amount, $userId);
+	}
+	
+	public function doAddMovie($title, $description){
+		return $this->movieRepository->doAddMovie($title, $description);
+	}
+	
+	public function doAddShow($showDate, $showTime, $showMovieId){
+		return $this->showRepository->doAddShow($showDate, $showTime, $showMovieId);
 	}
 }

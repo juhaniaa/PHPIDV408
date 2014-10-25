@@ -15,6 +15,8 @@ class ShowRepository extends base\Repository{
 	private static $movieDescription = "description";
 	private static $movieKey = "uniqueKey";
 	private static $movieShowView = "movie_shows";
+	private static $showTable = "CinShows";
+	private static $showMovieKey = "movieKeyFK";
 	
 	public function __construct(){
 		$this->dbTable = self::$movieShowView;
@@ -80,10 +82,10 @@ class ShowRepository extends base\Repository{
 			
 			$result = $query->fetchAll();
 			
+			$showList = new ShowList();
+			
 			if($result){
-				
-				$showList = new ShowList();
-				
+	
 				foreach ($result as $dbShow) {
 					
 					$movie = new Movie($dbShow[self::$movieTitle], $dbShow[self::$movieKey], $dbShow[self::$movieDescription]);
@@ -98,7 +100,7 @@ class ShowRepository extends base\Repository{
 				return $showList;
 				
 			} else {
-				return null;
+				return $showList;
 			}
 		} catch(PDOException $e){
 			print "Error!: " . $e->getMessage() . "</br>";
@@ -126,5 +128,22 @@ class ShowRepository extends base\Repository{
 		} else {
 			return null;
 		}
+	}
+	
+	public function doAddShow($showDate, $showTime, $showMovieId){
+		$db = $this->connection();
+		
+		$sql = "INSERT INTO " . self::$showTable . "(" . self::$showDate . ", " . self::$showTime . ", " . self::$showMovieKey . ") VALUES (?, ?, ?)";
+		$params = array($showDate, $showTime, $showMovieId);
+		
+		$query = $db->prepare($sql);
+		$result = $query->execute($params);
+		
+		if($result){
+			return $db->lastInsertId();
+		} else {
+			return false;
+		}
+		
 	}
 }
