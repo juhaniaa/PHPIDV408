@@ -22,6 +22,8 @@ class cinemaView{
 		$this->role = $role;
 	}
 	
+	/* HEADERS START */
+	
 	private function getMovieHeader(){
 		return "<h1>Movies</h1>";
 	}
@@ -37,6 +39,10 @@ class cinemaView{
 	private function getStartHeader(){
 		return "<h1>Welcome to the start page</h1>";
 	}
+	
+	/* HEADERS END */
+	
+	/* SHOW START */
 	
 	public function showMovieList(\model\MovieList $movieList){
 		$ret = $this->getMovieHeader();
@@ -57,7 +63,6 @@ class cinemaView{
 			$ret .= "<form action='index.php?action=" . \view\navView::$actionShowAddMovie . "' method='post'>
 					<input type='submit' value='Add new movie'> 
 			</form>";
-			//$ret .= "<li>" . \view\navView::getAddMovieNav() . "</li>";
 		}
 		
 		$ret .= "</ul>";
@@ -66,19 +71,16 @@ class cinemaView{
 	}
 	
 	public function showMovieInfo(\model\Movie $movie, \model\ShowList $showList){
-		
 		$ret = "";
 		$title = $movie->getTitle();
 		$id = $movie->getId();
-		
 		$desc = $movie->getDescription();
-		$ret .= "<h1>$title</h1>";
-		$ret .= "<ul>";
-		$ret .= "<li>Description: $desc</li>";
-		$ret .= "</ul>";
-		
-		$ret .= "<h2>Shows</h2>";
-		$ret .= "<ul>";
+		$ret .= "<h1>$title</h1>
+				<ul>
+					<li>Description: $desc</li>
+				</ul>
+				<h2>Shows</h2>
+				<ul>";
 		
 		$showList = $showList->toArray();
 		if(count($showList) == 0){
@@ -89,33 +91,38 @@ class cinemaView{
 				$showDate = $show->getShowDate();
 				$showTime = $show->getShowTime();
 				$ticketNav = "";
-				if($this->role !== \model\Role::$administrator){
+				
+				if($this->role !== \model\Role::$administrator){ // dont show tickets to admins
 					$ticketNav = \view\navView::getTicketNav($show->getShowId());
 				} 
 				$ret .= "<li>$showDate $showTime " . $ticketNav . "</li>";
 			}		
 		}
 		
-		if($this->role === \model\Role::$administrator){
-				$ret .= "<form action='index.php?action=" . \view\navView::$actionDoAddShow . "' method='post'>
+		if($this->role === \model\Role::$administrator){ // Admins may add shows to movies
+				$ret .= $this->showAddShowForm($id);
+			}
+		
+		$ret .= "</ul>";
+		return $ret;	
+	}
+
+	public function showAddShowForm($movieId){
+		return "<form action='index.php?action=" . \view\navView::$actionDoAddShow . "' method='post'>
 					<label for='" . self::$addShowTime . "'>Time: </label>
 					<input type='time' name='" . self::$addShowTime . "'>
 					<label for='" . \view\navView::$postDate . "'>Date: </label>
 					<input type='text' name='" . \view\navView::$postDate . "' id='" . \view\navView::$postDate . "'>
-					<input type='hidden' name='" . self::$addShowId . "' value='$id'>	
+					<input type='hidden' name='" . self::$addShowId . "' value='$movieId'>	
 					<input type='submit' value='Add Show'> 
 				</form>";
-			}
-		
-		$ret .= "</ul>";
-		return $ret;
-		
 	}
 	
 	public function showShowList(\model\ShowList $showList, $showDate){
 		$ret = "";
 		$ret .= $this->getShowHeader();
 
+		// pick date form
 		$ret .= "<form action='index.php?action=" . \view\navView::$actionChangeShowDate . "' method='post'>
 					<label>Date: </label>
 					<input type='text' name='" . \view\navView::$postDate . "' id='" . \view\navView::$postDate . "'>
@@ -164,40 +171,6 @@ class cinemaView{
 		return $ret;
 	}
 	
-	public function getTicketShow(){
-		return $_POST[self::$ticketShow];
-	}
-	
-	
-	public function getTicketAmount(){
-		return $_POST[self::$ticketAmount];
-	}
-	
-	public function getAddMovieTitle(){
-		return $_POST[self::$addMovieTitle];
-	}
-	
-	public function getAddMovieDesc(){
-		return $_POST[self::$addMovieDescription];
-	}
-	
-	public function getAddShowDate(){
-		return $_POST[\view\navView::$postDate];
-	}
-	
-	public function getAddShowTime(){
-		return $_POST[self::$addShowTime];
-	}
-	
-	public function getAddShowId(){
-		return $_POST[self::$addShowId];
-	}
-	
-	
-	/*
-	 * If customer or salesPerson then show "Get Tickets" button
-	 * else -> show message -> You have to log in first
-	 * */
 	public function showTicket(\model\Show $show){
 		$ret = $this->getTicketHeader();
 		$mTitle = $show->getTitle();
@@ -216,7 +189,8 @@ class cinemaView{
 			$submit = "<h4>(You have to log in to book ticket)</h4>";
 		}
 			
-		$ret .= "<form action='index.php?action=" . \view\navView::$actionDoTicket . "' method='post'>
+		// book tickets form
+		$ret .= "<form action='index.php?action=" . \view\navView::$actionDoBookTicket . "' method='post'>
 					<label>Amount: </label>
 					<input type='number' name='" . self::$ticketAmount . "' value='1' min='1' max='10'>
 					<input type='hidden' name='" . self::$ticketShow . "' value='$sId'>
@@ -249,9 +223,55 @@ class cinemaView{
 		return $ret;
 	}
 	
+	/* SHOW END */
+	
+	/* INPUT START */
+	
+	public function getTicketShow(){
+		return $_POST[self::$ticketShow];
+	}
+	
+	public function getTicketAmount(){
+		return $_POST[self::$ticketAmount];
+	}
+	
+	public function getAddMovieTitle(){
+		return $_POST[self::$addMovieTitle];
+	}
+	
+	public function getAddMovieDesc(){
+		return $_POST[self::$addMovieDescription];
+	}
+	
+	public function getAddShowDate(){
+		return $_POST[\view\navView::$postDate];
+	}
+	
+	public function getAddShowTime(){
+		return $_POST[self::$addShowTime];
+	}
+	
+	public function getAddShowId(){
+		return $_POST[self::$addShowId];
+	}
+	
+	/* INPUT END */
+	
+	
+	/* ERROR START */
+	
+	
+	public function errorInvalidInput(){
+		$ret = "<p>Invalid input was inserted</p>";
+		
+		return $ret;
+	}
+	
 	public function errorAccess(){
 		$ret = "<p>404 HTTP Page Not Found</p>";
 		
 		return $ret;
 	}
+	
+	/* ERROR END */
 }

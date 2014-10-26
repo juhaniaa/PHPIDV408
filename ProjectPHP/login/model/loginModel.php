@@ -12,41 +12,43 @@ class LoginModel{
 	private static $timestamp = "timestamp";
 	private static $userTable = "CinUsers";
 	private static $tempUserTable = "CinTempUsers";
-	private static $cookieTimer = 300;
+	private static $cookieTimer = 300; // cookie life-time limit
 	
-	public function __construct(){
+	private static $roleSession = "role";
+	private static $loggedSession = "logged";
+	private static $userSession = "loggedUser";
 		
-	}
-	
 	protected $dbConnection;
 	
+	// set up connection to db
 	protected function connection() {
 		try{
 		if ($this->dbConnection == NULL){
 			$this->dbConnection = new \PDO(\Settings::$DB_CONNECTION, \Settings::$DB_USERNAME, \Settings::$DB_PASSWORD);
 			$this->dbConnection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		} 
-		
+		} 		
 		return $this->dbConnection;
 		
 		} catch(PDOException $ex){
-			var_dump($ex);
-		
+
 		}
 	}
 	
+	// returns the role of the user
 	public function getRole(){
-		if(isset($_SESSION["role"])){
-			return $_SESSION["role"];
+		if(isset($_SESSION[self::$roleSession])){
+			return $_SESSION[self::$roleSession];
 		} else {
 			return \model\Role::$anonymous;
 		}
 	}
 	
+	// return name of user
 	public function getUser(){
-		return $_SESSION["userId"];
+		return $_SESSION[self::$userSession];
 	}
 	
+	// returns the value of how long cookies should last
 	public function getCookieTimer(){
 		return self::$cookieTimer;
 	}
@@ -71,13 +73,12 @@ class LoginModel{
 			$aip = $clientId[0];
 			$bip = $clientId[1];
 			$agent = $clientId[2];
-			$role = $result["role"];
-			$userId = $result["uniqueId"];
+			$role = $result[self::$roleSession];
+			$userId = $result[$id];
 
-			$_SESSION["logged"] = hash("sha256", $aip . $bip . $agent);
-			$_SESSION["loggedUser"] = $user;
-			$_SESSION["role"] = $role;
-			$_SESSION["userId"] = $userId;
+			$_SESSION[self::$loggedSession] = hash("sha256", $aip . $bip . $agent);
+			$_SESSION[self::$userSession] = $user;
+			$_SESSION[self::$roleSession] = $role;
 			
 			return true;
 		} else {
@@ -85,15 +86,15 @@ class LoginModel{
 		}		
 	}
 	
+	// unsets login information from session
 	public function logoutUser(){ 
-		
-		unset($_SESSION["logged"]);
-		unset($_SESSION["loggedUser"]);
-		unset($_SESSION["role"]);
-		unset($_SESSION["userId"]);
+		unset($_SESSION[self::$loggedSession]);
+		unset($_SESSION[self::$userSession]);
+		unset($_SESSION[self::$roleSession]);
 		return true;
 	}
 	
+	// login user with stored credentials
 	public function loginCredentialsUser($user, $pass, $clientId){
 		
 		$db = $this->connection();
@@ -117,6 +118,7 @@ class LoginModel{
 		}
 	}
 	
+	// register new user to db
 	public function insertUser($name, $pass){
 		
 		$db = $this->connection();
@@ -130,6 +132,7 @@ class LoginModel{
 		$query->execute($params);
 	}
 	
+	// checks if user exists in db
 	public function checkUniqueUser($name){
 		
 		$db = $this->connection();
@@ -149,6 +152,7 @@ class LoginModel{
 		}	
 	}
 	
+	// store time when cookies are set in tempUsers table
 	public function storeCookieTime($user){
 		
 		$time = time();
@@ -162,10 +166,12 @@ class LoginModel{
 		$query->execute($params);	
 	}
 	
+	// return user name
 	public function getUserName(){
-		return $_SESSION["loggedUser"];
+		return $_SESSION[self::$userSession];
 	}
 	
+	// check if user is logged in to session
 	public function isUserLogged($client){
 		
 		$aip = $client[0];
@@ -174,14 +180,15 @@ class LoginModel{
 		
 		$ident = hash("sha256", $aip . $bip . $agent);
 		
-		if(isset($_SESSION["logged"])){
-			if($_SESSION["logged"] == $ident){
+		if(isset($_SESSION[self::$loggedSession])){
+			if($_SESSION[self::$loggedSession] == $ident){
 				return true;
 			}
 		} 
 		return false;
 	}
 	
+	// validation of name length
 	public function checkNameLength($name){
 		if(strlen($name) < 3){
 			return false;
@@ -190,6 +197,7 @@ class LoginModel{
 		}
 	}
 	
+	// validation of password length
 	public function checkPassLength($pass){
 		
 		$length = strlen($pass);
@@ -202,6 +210,7 @@ class LoginModel{
 		
 	}
 	
+	// validation of name input
 	public function nameInputValidation($name){
 		$res = null;
 				
@@ -212,8 +221,4 @@ class LoginModel{
 		
 		return $res;
 	}
-	
-	
-	
-	
 }

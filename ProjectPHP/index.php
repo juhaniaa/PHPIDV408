@@ -1,6 +1,6 @@
 <?php
 
-require_once ('./common/HTMLView.php');
+require_once ('./src/view/HTMLView.php');
 require_once ('./src/controller/navController.php');
 
 session_start();

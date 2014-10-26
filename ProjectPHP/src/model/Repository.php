@@ -19,8 +19,7 @@ abstract class Repository {
 		return $this->dbConnection;
 		
 		} catch(PDOException $ex){
-			var_dump($ex);
-			die();
+			
 		}
 	}
 }

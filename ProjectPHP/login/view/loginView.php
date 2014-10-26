@@ -2,7 +2,7 @@
 
 namespace login\view;
 
-require_once("./common/CookieStorage.php");
+require_once("./login/view/CookieStorage.php");
 
 class LoginView{
 	
@@ -10,13 +10,10 @@ class LoginView{
 	private $cookieUser = "cookieUser";
 	private $message;
 	private $model;
-	private $svDay = array("Mon"=>"Måndag", "Tue"=>"Tisdag", "Wed"=>"Onsdag", "Thu"=>"Torsdag", "Fri"=>"Fredag", "Sat"=>"Lördag", "Sun"=>"Söndag");
-	private $svMonth = array("01"=>"Januari", "02"=>"Februari", "03"=>"Mars", "04"=>"April", "05"=>"Maj", "06"=>"Juni", "07"=>"Juli", "08"=>"Augusti", "09"=>"September", "10"=>"Oktober", "11"=>"November", "12"=>"December");
-	
 	
 	public function __construct(\login\model\LoginModel $model){
 		$this->model = $model;
-		$this->message = new \common\CookieStorage();
+		$this->message = new \login\view\CookieStorage();
 	}
 	
 	/* INPUT START */

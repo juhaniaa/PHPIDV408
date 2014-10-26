@@ -50,7 +50,7 @@ TC 1.2b.3 List shows for a specific date with invalid date-input
 4 Press Go to date
 
 Output
-	See TC 1.2.1 output
+	* Error message is shown
 	
 TC 1.3.1 Show specific movie information
 ----------------------------------------
@@ -58,7 +58,7 @@ TC 1.3.1 Show specific movie information
 2 Choose a movie in the movie list
 
 Output
-	* Movie information is shown with title, description and picture
+	* Movie information is shown with title and description
 	* A list of all upcoming shows with this movie is shown with button to book tickets for each show
 	
 TC 1.4.1 Book ticket to show by movie

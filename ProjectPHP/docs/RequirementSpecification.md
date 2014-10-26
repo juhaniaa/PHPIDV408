@@ -44,15 +44,12 @@ Use-cases:
 	- UC 2.3 Salesperson confirms booking
 	- UC 2.4 Salesperson searches for specific booking by name or id
 	- UC 2.5 Salesperson views list of all available movies
-	- UC 2.6 Salesperson sells ticket on specific show for customer
+	- UC 2.6 Salesperson books ticket on specific show for customer
 	
 3. Administrator
 	- UC 3.1 Administrator adds cinema
 	- UC 3.2 Administrator adds movie
 	- UC 3.3 Administrator adds show
-	- UC 3.4 Administrator views list of all movies
-	- UC 3.5 Administrator views list of all shows on a specific date
-	- UC 3.6 Administrator views list of all cinemas
 	
 4. Anonymous User
 	- UC 4.1 User views start page

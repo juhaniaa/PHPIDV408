@@ -34,8 +34,8 @@ class cinemaModel{
 		return $this->showRepository->getShowsByDateList($showDate);
 	}
 	
-	public function getShowsByMovieIdList($movieId){
-		return $this->showRepository->getShowsByMovieIdList($movieId);
+	public function getShowsByMovieIdList($movieId, $role){
+		return $this->showRepository->getShowsByMovieIdList($movieId, $role);
 	}
 	
 	public function getShowById($showId){
@@ -52,5 +52,20 @@ class cinemaModel{
 	
 	public function doAddShow($showDate, $showTime, $showMovieId){
 		return $this->showRepository->doAddShow($showDate, $showTime, $showMovieId);
+	}
+	
+	public function getMovieByTitle($title){
+		return $this->movieRepository->getMovieByTitle($title);
+	}
+	
+	public function checkDate($date){
+		$d = \DateTime::createFromFormat('Y-m-d', $date);
+    	$result = $d && $d->format('Y-m-d') == $date;
+		return $result;
+	}
+	
+	public function checkTicketAmount($amount){
+		$result = is_numeric($amount);
+		return $result;
 	}
 }

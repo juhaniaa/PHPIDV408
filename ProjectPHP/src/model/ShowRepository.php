@@ -22,19 +22,13 @@ class ShowRepository extends base\Repository{
 		$this->dbTable = self::$movieShowView;
 	}
 	
-	// return list of all shows on a specific date
-	
-	// movie_shows view
-	
-	// get all rows with $showDate
-	
-	// then return a ShowList object which consists of an array of Shows where every Show contains a Date, Time and Movie object
+	// return a ShowList object which consists of an array of Shows where every Show contains a DateTime, showId and Movie object
 	public function getShowsByDateList($showDate){
 		
 		try{
 			$db = $this->connection();
 			
-			$sql = "SELECT * FROM $this->dbTable WHERE " . self::$showDate . " = ?";
+			$sql = "SELECT * FROM $this->dbTable WHERE " . self::$showDate . " = ? ORDER BY " . self::$showTime;
 			$params = array($showDate);
 					
 			$query = $db->prepare($sql);
@@ -64,16 +58,21 @@ class ShowRepository extends base\Repository{
 				return $showList;
 			}
 		} catch(PDOException $e){
-			print "Error!: " . $e->getMessage() . "</br>";
-			die();
+		
 		}
 	}
 	
-	public function getShowsByMovieIdList($id){
+	// get all shows belonging to specific movie
+	public function getShowsByMovieIdList($id, $role){
 		try{
 			$db = $this->connection();
+		
+			if($role === \model\Role::$administrator){
+				$sql = "SELECT * FROM $this->dbTable WHERE " . self::$movieKey . " = ? ORDER BY " . self::$showDate;
+			} else {
+				$sql = "SELECT * FROM $this->dbTable WHERE " . self::$movieKey . " = ? AND " . self::$showDate . " >= CURDATE() ORDER BY " . self::$showDate;
+			}
 			
-			$sql = "SELECT * FROM $this->dbTable WHERE " . self::$movieKey . " = ?";
 			$params = array($id);
 					
 			$query = $db->prepare($sql);
@@ -103,11 +102,11 @@ class ShowRepository extends base\Repository{
 				return $showList;
 			}
 		} catch(PDOException $e){
-			print "Error!: " . $e->getMessage() . "</br>";
-			die();
+			
 		}
 	}
 	
+	// get a specific show by Id
 	public function getShowById($showId){
 		$db = $this->connection();
 		
@@ -119,7 +118,6 @@ class ShowRepository extends base\Repository{
 	
 		$result = $query->fetch();
 
-		
 		if($result){
 			$movie = new Movie($result[self::$movieTitle], $result[self::$movieKey], $result[self::$movieDescription]);
 			$sDateTime = new \DateTime($result[self::$showDate] . $result[self::$showTime]);
@@ -130,7 +128,9 @@ class ShowRepository extends base\Repository{
 		}
 	}
 	
+	// add new Show to db
 	public function doAddShow($showDate, $showTime, $showMovieId){
+	
 		$db = $this->connection();
 		
 		$sql = "INSERT INTO " . self::$showTable . "(" . self::$showDate . ", " . self::$showTime . ", " . self::$showMovieKey . ") VALUES (?, ?, ?)";

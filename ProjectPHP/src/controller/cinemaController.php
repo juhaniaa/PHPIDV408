@@ -37,29 +37,37 @@ class cinemaController {
 	
 	public function changeShowDate(){
 		/* UC 1.2b */
-		\view\navView::setShowDate(); // redirects via header->location
+		$userShowDate = \view\navView::getSetShowDate();
+		
+		$okDate = $this->model->checkDate($userShowDate);
+		
+		if($okDate){
+			\view\navView::setShowDate($userShowDate); // redirects via header->location
+		} else {
+			return $this->view->errorInvalidInput();
+		}	
 	}
 	
 	public function goToStart(){
+		/* UC 4.1 */
 		\view\navView::goToStart(); // redirects via header->location
 	}
-	
-	
 	
 	public function showMovieInfo(){
 		/* UC 1.3 */
 		$MovieId = \view\navView::getMovieId();
 		$chosenMovie = $this->model->getMovieById($MovieId);
 
-		$showList = $this->model->getShowsByMovieIdList($MovieId);
+		$showList = $this->model->getShowsByMovieIdList($MovieId, $this->role);
 		return $this->view->showMovieInfo($chosenMovie, $showList);
 	}
 	
 	public function showBookTicket(){
-		
+		/* UC 1.4 */
 		$showId = \view\navView::getShowId();
 		$chosenShow = $this->model->getShowById($showId);
 		
+		// admin does not have to see ticket
 		if($this->role !== \model\Role::$administrator){
 			return $this->view->showTicket($chosenShow);
 		} else {
@@ -68,6 +76,7 @@ class cinemaController {
 	}
 	
 	public function showAddMovie(){
+		/* UC 3.2 */
 		if($this->role === \model\Role::$administrator){
 			return $this->view->showAddMovie();
 		} else {
@@ -76,20 +85,34 @@ class cinemaController {
 	}
 	
 	public function doAddMovie(){
-		if($this->role === \model\Role::$administrator){
+		/* UC 3.2 */
+		if($this->role === \model\Role::$administrator){ // only for admins
 			
 			$movieTitle = $this->view->getAddMovieTitle();
-			$movieDesc = $this->view->getAddMovieDesc();
+		
+			$movieExists = $this->model->getMovieByTitle($movieTitle);
 			
-			$result = $this->model->doAddMovie($movieTitle, $movieDesc);
-			return $this->showMovies();
+			if($movieExists){
+				return $this->view->errorInvalidInput();
+			} else{
+				$movieDesc = $this->view->getAddMovieDesc();
+				
+				$result = $this->model->doAddMovie($movieTitle, $movieDesc);
+				
+				if($result){ // if insert was successful
+					return $this->showMovies();
+				} else {
+					return $this->view->errorInvalidInput();
+				}
+			}
 		} else {
 			return $this->view->errorAccess();
 		}
 	}
 	
 	public function doAddShow(){
-		if($this->role === \model\Role::$administrator){
+		/* UC 3.3 */
+		if($this->role === \model\Role::$administrator){ // only for admins
 			
 			$showDate = $this->view->getAddShowDate();
 			$showTime = $this->view->getAddShowTime();
@@ -97,18 +120,19 @@ class cinemaController {
 			
 			$newShowId = $this->model->doAddShow($showDate, $showTime, $showMovieId);
 			
-			if($newShowId){
+			if($newShowId){ // if insert was successful
 				return $this->showMovies();
 			} else {
 				return $this->view->errorAccess();
 			}
-	
 		} else {
 			return $this->view->errorAccess();
 		}
 	}
 	
 	public function ticketIsSet(){
+		/* @return bool
+		 * checks if a ticket is defined */
 		$showId = $this->view->getTicketShow();
 		$amount = $this->view->getTicketAmount();
 		
@@ -120,19 +144,24 @@ class cinemaController {
 	}
 	
 	public function doReserveTicket($userId){
-
-			
-		
-		if($this->role === \model\Role::$customer && $this->role === \model\Role::$salesPerson){
+		/* UC 1.4 and UC 2.6 */	
+		if($this->role === \model\Role::$customer || $this->role === \model\Role::$salesPerson){ // only for customer and salesperson
 			$showId = $this->view->getTicketShow();
 			$amount = $this->view->getTicketAmount();
 			
-			$result = $this->model->doReserveTicket($showId, $amount, $userId);
+			$okAmount = $this->model->checkTicketAmount($amount);
 			
-			if($result){
-				return $this->view->showTicketReservedSuccess();
+			if($okAmount){ // if valid amount
+			
+				$result = $this->model->doReserveTicket($showId, $amount, $userId);
+				
+				if($result){ // if reservation was successful
+					return $this->view->showTicketReservedSuccess();
+				} else{
+					return $this->view->showTicketReservedError();
+				}
 			} else{
-				return $this->view->showTicketReservedError();
+				return $this->view->errorInvalidInput();
 			}
 		} else {
 			return $this->view->errorAccess();

@@ -18,7 +18,9 @@ class MovieRepository extends base\Repository{
 		$this->dbTable = self::$movieTable;
 	}
 	
+	// add a movie to db
 	public function doAddMovie($movieTitle, $movieDesc){
+			
 		$db = $this->connection();
 		
 		$sql = "INSERT INTO $this->dbTable (" . self::$title . ", " . self::$description . ") VALUES (?, ?)";
@@ -31,15 +33,37 @@ class MovieRepository extends base\Repository{
 			return true;
 		} else {
 			return false;
-		}
-		
+		}	
 	}
 	
+	// return a movie specified by id
 	public function getMovieById($id){
 		$db = $this->connection();
 		
 		$sql = "SELECT * FROM $this->dbTable WHERE " . self::$key . " = ?";
 		$params = array($id);
+		
+		$query = $db->prepare($sql);
+		$query->execute($params);
+		
+		$result = $query->fetch();
+		
+		if($result){
+			$movie = new Movie($result[self::$title], $result[self::$key], $result[self::$description]);
+			return $movie;
+		} else {
+			return null;
+		}
+	}
+	
+	
+	
+	// return a movie specified by title
+	public function getMovieByTitle($title){
+		$db = $this->connection();
+		
+		$sql = "SELECT * FROM $this->dbTable WHERE " . self::$title . " = ?";
+		$params = array($title);
 		
 		$query = $db->prepare($sql);
 		$query->execute($params);
@@ -85,17 +109,7 @@ class MovieRepository extends base\Repository{
 				return null;
 			}
 		} catch(PDOException $e){
-			print "Error!: " . $e->getMessage() . "</br>";
-			die();
-		}
-		
+			
+		}	
 	}
-	
-	// return list of movies that have a show
-	// should this be in showRepository???
-	public function getAvailableMoviesList(){
-		
-		
-	}
-	
 }

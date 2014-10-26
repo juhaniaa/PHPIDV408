@@ -17,6 +17,7 @@ class TicketRepository extends base\Repository{
 		$this->dbTable = self::$ticketTable;
 	}
 	
+	// add ticket to db
 	public function doReserveTicket($showId, $amount, $userId){
 		
 		$db = $this->connection();

@@ -1,6 +1,6 @@
 <?php
 
-namespace common;
+namespace login\view;
 
 class CookieStorage {
 

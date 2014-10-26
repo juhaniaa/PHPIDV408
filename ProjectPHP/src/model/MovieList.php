@@ -14,16 +14,13 @@ class MovieList{
 		$this->movieList = array();
 	}
 	
-	
 	public function getList(){
 		
 		return $this->movieList;
 	}
 	
-	public function add(Movie $movie){
-		
-		if(!$this->contains($movie)){
-			
+	public function add(Movie $movie){	
+		if(!$this->contains($movie)){		
 			$this->movieList[] = $movie;
 		}
 	}
