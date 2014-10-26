@@ -63,11 +63,11 @@ class ShowRepository extends base\Repository{
 	}
 	
 	// get all shows belonging to specific movie
-	public function getShowsByMovieIdList($id, $role){
+	public function getShowsByMovieIdList($id, $isAdmin){
 		try{
 			$db = $this->connection();
 		
-			if($role === \model\Role::$administrator){
+			if($isAdmin){
 				$sql = "SELECT * FROM $this->dbTable WHERE " . self::$movieKey . " = ? ORDER BY " . self::$showDate;
 			} else {
 				$sql = "SELECT * FROM $this->dbTable WHERE " . self::$movieKey . " = ? AND " . self::$showDate . " >= CURDATE() ORDER BY " . self::$showDate;

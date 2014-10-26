@@ -3,7 +3,6 @@
 namespace view;
 
 class cinemaView{
-	private $model;
 	private $role;
 	
 	private static $ticketShow = "ticketShow";
@@ -17,8 +16,7 @@ class cinemaView{
 	public static $addShowId = "addShowId";
 	
 	
-	public function __construct(\model\cinemaModel $model, $role){
-		$this->model = $model;
+	public function __construct($role){
 		$this->role = $role;
 	}
 	

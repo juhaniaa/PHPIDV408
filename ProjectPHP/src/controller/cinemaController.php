@@ -57,8 +57,11 @@ class cinemaController {
 		/* UC 1.3 */
 		$MovieId = \view\navView::getMovieId();
 		$chosenMovie = $this->model->getMovieById($MovieId);
-
-		$showList = $this->model->getShowsByMovieIdList($MovieId, $this->role);
+		$isAdmin = false;
+		if($this->role === \model\Role::$administrator){
+			$isAdmin = true;
+		}
+		$showList = $this->model->getShowsByMovieIdList($MovieId, $isAdmin);
 		return $this->view->showMovieInfo($chosenMovie, $showList);
 	}
 	

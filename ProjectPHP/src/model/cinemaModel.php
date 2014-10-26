@@ -10,8 +10,8 @@ require_once("TicketRepository.php");
 
 class cinemaModel{
 	
-	private $movies = array();
-	private $shows = array();
+	//private $movies = array();
+	//private $shows = array();
 	private $movieRepository;
 	private $showRepository;
 	private $ticketRepository;
@@ -34,8 +34,8 @@ class cinemaModel{
 		return $this->showRepository->getShowsByDateList($showDate);
 	}
 	
-	public function getShowsByMovieIdList($movieId, $role){
-		return $this->showRepository->getShowsByMovieIdList($movieId, $role);
+	public function getShowsByMovieIdList($movieId, $isAdmin){
+		return $this->showRepository->getShowsByMovieIdList($movieId, $isAdmin);
 	}
 	
 	public function getShowById($showId){
