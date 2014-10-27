@@ -12,7 +12,7 @@ class cinemaController {
 	
 	public function __construct($role){
 		$this->model = new \model\cinemaModel();
-		$this->view = new \view\cinemaView($this->model, $role);
+		$this->view = new \view\cinemaView($role);
 		$this->role = $role;
 	}
 	

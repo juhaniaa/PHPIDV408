@@ -180,7 +180,7 @@ class cinemaView{
 			<li>Movie: $mTitle</li>
 			<li>Date: $sDate</li>
 			<li>Time: $sTime</li>";
-		
+			
 		if($this->role !== \model\Role::$administrator && $this->role !== \model\Role::$anonymous){
 			$submit = "<input type='submit' value='Get Tickets'>";
 		} else {
